@@ -29,7 +29,7 @@ class NurseInformation extends StatelessWidget {
         ],
       ),
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      child: Column(
+      child: ListView(
         children: [
           //btns madarek and  etelaat
           /** Row(

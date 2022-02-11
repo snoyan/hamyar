@@ -31,22 +31,16 @@ class BottomNavItem extends StatelessWidget {
       reverseDuration: const Duration(milliseconds: 200),
       child: isActive
           ? Container(
-              //color: Colors.white,
+              ///color: Colors.white,
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    title,
-                    style: TextStyle(
-                      // color: Colors.white,
-                      fontFamily: "iransans",
-                      fontWeight: FontWeight.bold,
-                      color: activeColor ?? kBaseColor5,
-                    ),
-                  ),
-                  const SizedBox(height: 5.0),
-                ],
+              child: Text(
+                title,
+                style: TextStyle(
+                  /// color: Colors.white,
+                  fontFamily: "iransans",
+                  fontWeight: FontWeight.bold,
+                  color: activeColor ?? kBaseColor5,
+                ),
               ),
             )
           : Icon(
