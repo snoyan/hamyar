@@ -57,8 +57,7 @@ class Network {
       print(exception);
     }
   }
-
-////////////////////// post request/////////////////////////
+  ////////////////////// post request/////////////////////////
   void netCreate(int id) async {
     var url = Uri.parse(
       baseUrl + createEndPoint,
