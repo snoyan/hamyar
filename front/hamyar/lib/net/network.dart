@@ -18,7 +18,11 @@ class Network {
     return parsedString;
   }
 
+<<<<<<< HEAD
   //////////////////////// put request/////////////////////////
+=======
+  ////////////////////// put request/////////////////////////
+>>>>>>> 46f2e0db38e573c72705f99fe9eaa41f184e24ac
   void netUpdate(int id) async {
     var url = Uri.parse(
       baseUrl + getEndPoint + id.toString() + '/',
