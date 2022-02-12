@@ -1,6 +1,7 @@
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'endpints.dart';
 import 'nurse_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,10 +12,6 @@ void upDateSharedPreferences(String token) async {
 }
 
 class Network {
-  String apiKey = 'Token 0e154d13e736c2f4bf671373069b68930e599b9c';
-  String baseUrl = 'https://epic1729.pythonanywhere.com/';
-  String getEndPoint = 'api/nurse/';
-  String createEndPoint = 'api/create/';
   List<Nurse> nurses = [];
 
   String parseHtmlString(String htmlString) {
@@ -24,9 +21,8 @@ class Network {
     return parsedString;
   }
 
-<<<<<<< HEAD
   //////////////////////// put request/////////////////////////
-=======
+
   loginToken(String username, String password) async {
     /* Map data = {
     'username': '$username'
@@ -53,10 +49,9 @@ class Network {
   }
 
   ////////////////////// put request/////////////////////////
->>>>>>> 9650aec0c50119f0c9f4d698190be585345449dd
-  void netUpdate(int id) async {
+  void netUpdate(int id, String endpoint) async {
     var url = Uri.parse(
-      baseUrl + getEndPoint + id.toString() + '/',
+      baseUrl + endpoint + id.toString() + '/',
     );
     try {
       http.Response response = await http.put(
@@ -90,9 +85,9 @@ class Network {
   }
 
 ////////////////////// post request/////////////////////////
-  void netCreate(int id) async {
+  void netCreate(int id, String endpoint) async {
     var url = Uri.parse(
-      baseUrl + createEndPoint,
+      baseUrl + endpoint,
     );
     try {
       http.Response response = await http.post(
@@ -126,9 +121,9 @@ class Network {
   }
 
 ////////////////////// get request//////////////////////////
-  Future<List<Nurse>> netGet() async {
+  Future<List<Nurse>> netGet(String endpoint) async {
     var url = Uri.parse(
-      baseUrl + getEndPoint,
+      baseUrl + endpoint,
     );
     try {
       http.Response response = await http.get(
@@ -194,9 +189,9 @@ class Network {
 
   //////////////// delete request/////////////////////////
 
-  void netDelete(int id) async {
+  void netDelete(int id, String endpoint) async {
     var url = Uri.parse(
-      baseUrl + getEndPoint + id.toString() + '/',
+      baseUrl + endpoint + id.toString() + '/',
     );
     try {
       http.Response response = await http.delete(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hamyar/net/endpints.dart';
 import 'package:hamyar/screens/main_screen/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constant.dart';
@@ -36,7 +37,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           isTrying = false;
         });
         bool isLogedin = false;
-        WelcomeScreen.nurseList = await Network().netGet();
+        WelcomeScreen.nurseList = await Network().netGet(e_get_nurse_list);
         SharedPreferences _prefs = await SharedPreferences.getInstance();
         if (_prefs.getString('token') == null ||
             _prefs.getString('token') == '')

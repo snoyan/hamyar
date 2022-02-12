@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
-
 class FormError extends StatelessWidget {
   const FormError({
     Key? key,
@@ -27,7 +25,7 @@ class FormError extends StatelessWidget {
           height: 14,
           width: 14,
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         Text(error),
