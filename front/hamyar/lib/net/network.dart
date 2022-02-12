@@ -2,13 +2,19 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'nurse_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+//save token taken from signup user
+void upDateSharedPreferences(String token) async {
+  SharedPreferences _prefs = await SharedPreferences.getInstance();
+  _prefs.setString('token', token);
+}
 
 class Network {
   String apiKey = 'Token 0e154d13e736c2f4bf671373069b68930e599b9c';
   String baseUrl = 'https://epic1729.pythonanywhere.com/';
   String getEndPoint = 'api/nurse/';
   String createEndPoint = 'api/create/';
-
   List<Nurse> nurses = [];
 
   String parseHtmlString(String htmlString) {
@@ -18,11 +24,32 @@ class Network {
     return parsedString;
   }
 
-<<<<<<< HEAD
-  //////////////////////// put request/////////////////////////
-=======
+  loginToken(String username, String password) async {
+    /* Map data = {
+    'username': '$username'
+  }*/
+    final response = await http.post(
+      Uri.parse('https://epic1729.pythonanywhere.com/api-token-auth/'),
+      headers: <String, String>{
+        'Authorization': apiKey,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+          <String, String>{'username': username, 'password': password}),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> token = json.decode(response.body);
+      upDateSharedPreferences(token['token']);
+      //return true;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load user');
+    }
+  }
+
   ////////////////////// put request/////////////////////////
->>>>>>> 46f2e0db38e573c72705f99fe9eaa41f184e24ac
   void netUpdate(int id) async {
     var url = Uri.parse(
       baseUrl + getEndPoint + id.toString() + '/',

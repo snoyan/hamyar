@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hamyar/screens/main_screen/main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constant.dart';
 import '../net/network.dart';
 import '../net/nurse_model.dart';
@@ -33,9 +35,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         setState(() {
           isTrying = false;
         });
+        bool isLogedin = false;
         WelcomeScreen.nurseList = await Network().netGet();
-        await Future.delayed(Duration(seconds: 4));
-        Navigator.pushNamed(context, '/main_screen');
+        SharedPreferences _prefs = await SharedPreferences.getInstance();
+        if (_prefs.getString('token') == null ||
+            _prefs.getString('token') == '')
+          bool isLogedin = false;
+        else
+          isLogedin = true;
+
+        //await Future.delayed(Duration(seconds: 4));
+        Navigator.pushNamed(context, '/main_screen',
+            arguments: HomeArg(isLogedin));
       }
     } on SocketException catch (_) {
       print('not connected');

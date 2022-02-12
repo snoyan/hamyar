@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hamyar/net/network.dart';
 
 import '../../components/custom_surfix_icon.dart';
 import '../../components/default_button.dart';
 import '../../components/form_error.dart';
 import '../../constant.dart';
+import '../nurse_signPage/nurse_signPage.dart';
 import 'components/no_account_text.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -52,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.04),
-                  Text(
+                  const Text(
                     "خوش آمدید",
                     style: TextStyle(
                       color: Colors.black,
@@ -61,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Text(
+                  const Text(
                     "جهت پیوستن به جمع پرستاران میبایست حساب کاربری داشته و یا ثبت نام کنید!  ",
                     textAlign: TextAlign.center,
                   ),
@@ -71,9 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         buildUsernameFormField(),
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
                         buildPasswordFormField(),
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
                         Row(
                           children: [
                             Checkbox(
@@ -85,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 });
                               },
                             ),
-                            Text("مرا به خاطر بسپار"),
+                            const Text("مرا به خاطر بسپار"),
                             Spacer(),
                             GestureDetector(
                               onTap: () {},
@@ -104,36 +106,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         DefaultButton(
                           text: "ادامه",
                           press: () async {
-                            /*  removeError();
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  setState(() {
-                                    showSpinner = true;
-                                  });
-                                  try {
-                                    //Login - Returns the access token on success.
-                                    await NetworkHelper()
-                                        .wooCommerce
-                                        .authenticateViaJWT(
-                                            username: userName,
-                                            password: password);
-                                    bool isLoggedIn = await NetworkHelper()
-                                        .wooCommerce
-                                        .isCustomerLoggedIn();
-                                    if (isLoggedIn) {
-                                      setState(() {
-                                        showSpinner = true;
-                                      });
-                                      Navigator.pushNamed(
-                                          context, HomeScreen.routeName);
-                                    } else {
-                                      print(
-                                          ' username or password was incorrect');
-                                    }
-                                  } catch (e) {
-                                    print(e);
-                                  }
-                                }*/
+                            removeError();
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              setState(() {
+                                showSpinner = true;
+                              });
+
+                              try {
+                                //Login - Returns the access token on success.
+                                await Network()
+                                    .loginToken(userName!, password!);
+
+                                Navigator.pushNamed(
+                                    context, NurseSignUp.routeName);
+                              } catch (e) {
+                                print(e);
+                              }
+                            }
                           },
                         ),
                       ],
@@ -159,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                        ),
                       */
 
-                   NoAccountText(),
+                  NoAccountText(),
                 ],
               ),
             ),

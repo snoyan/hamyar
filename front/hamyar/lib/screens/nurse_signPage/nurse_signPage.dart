@@ -5,9 +5,11 @@ import 'package:hamyar/data.dart';
 import 'package:hamyar/models/states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/custom_surfix_icon.dart';
 import '../../components/form_helper.dart';
+import '../main_screen/main_screen.dart';
 
 class NurseSignUp extends StatefulWidget {
   const NurseSignUp({Key? key}) : super(key: key);
@@ -268,8 +270,19 @@ class _NurseSignUpState extends State<NurseSignUp> {
             child: Row(
               children: [
                 IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+                    onPressed: () async {
+                      bool isLogedin = false;
+                      SharedPreferences _prefs =
+                          await SharedPreferences.getInstance();
+                      if (_prefs.getString('token') == null ||
+                          _prefs.getString('token') == '')
+                        bool isLogedin = false;
+                      else
+                        isLogedin = true;
+
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          MainScreen.routeName, (Route<dynamic> route) => false,
+                          arguments: HomeArg(isLogedin));
                     },
                     icon: const Icon(
                       Icons.arrow_back,
