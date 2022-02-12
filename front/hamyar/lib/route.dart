@@ -16,7 +16,7 @@ import 'screens/search/search_screen.dart';
 import 'screens/signup/signup_popup.dart';
 
 final Map<String, WidgetBuilder> myRoutes = {
-  MainScreen.routeName: (context) => const MainScreen(),
+  MainScreen.routeName: (context) => MainScreen(),
   AdsScreen.routeName: (context) =>
       AdsScreen(stateindex: MainScreen.selectedState),
   NurseInfo.routeName: (context) => const NurseInfo(),
@@ -27,4 +27,5 @@ final Map<String, WidgetBuilder> myRoutes = {
   EditProfileScreen.routeName: (context) => EditProfileScreen(),
   LoginScreen.routeName: (context) => const LoginScreen(),
   WelcomeScreen.routeName: (context) => const WelcomeScreen(),
+  NurseSignUp.routeName: (context) => NurseSignUp()
 };

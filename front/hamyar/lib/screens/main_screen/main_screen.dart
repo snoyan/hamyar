@@ -14,7 +14,7 @@ import '../../data.dart';
 import 'components/animated_bottom_nav.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  MainScreen({Key? key}) : super(key: key);
 
   static String routeName = "/main_screen";
   static int selectedState = 0;
@@ -24,7 +24,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late int _currentPage;
-  bool isLogedIn = false;
+
   bool hasAds = false;
   @override
   void initState() {
@@ -60,6 +60,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as HomeArg;
+
     /// The SystemChrome.setPreferredOrientations is for Lock up Rotation Screen .
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -87,7 +89,7 @@ class _MainScreenState extends State<MainScreen> {
         floatingActionButton: _currentPage == 0
             ? FloatingActionButton(
                 backgroundColor: kBaseColor2,
-                child: isLogedIn
+                child: args.isLogedin
                     ? Container(
                         padding: const EdgeInsets.only(top: 6, left: 3),
                         child: const Center(
@@ -115,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
                         )),
                       ),
                 onPressed: () {
-                  isLogedIn
+                  args.isLogedin
                       ? hasAds
                           ? Navigator.pushNamed(
                               context, EditProfileScreen.routeName)
@@ -216,4 +218,11 @@ class BottomNavItem extends StatelessWidget {
             ),
     );
   }
+}
+
+class HomeArg {
+  final bool isLogedin;
+  //final String message;
+
+  HomeArg(this.isLogedin);
 }
