@@ -25,7 +25,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late int _currentPage;
 
-  bool hasAds = false;
   @override
   void initState() {
     _currentPage = 0;
@@ -118,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                 onPressed: () {
                   args.isLogedin
-                      ? hasAds
+                      ? args.hasAds
                           ? Navigator.pushNamed(
                               context, EditProfileScreen.routeName)
                           : Navigator.pushNamed(context, NurseSignUp.routeName)
@@ -222,7 +221,8 @@ class BottomNavItem extends StatelessWidget {
 
 class HomeArg {
   final bool isLogedin;
+  final bool hasAds;
   //final String message;
 
-  HomeArg(this.isLogedin);
+  HomeArg(this.isLogedin, this.hasAds);
 }

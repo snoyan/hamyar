@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 import '../constant.dart';
+import '../screens/nurse_signPage/nurse_signPage.dart';
 
 //age value
 int val = 0;
@@ -35,6 +36,9 @@ Container nameField(bool? isWriteAble, String label, BuildContext context) {
           hintStyle: TextStyle(
               color: Colors.grey.withOpacity(0.5), fontFamily: 'iransans')),
       cursorColor: kBaseColor2,
+      onChanged: (value) {
+        NurseSignUp.firstName = value;
+      },
     ),
   );
 }
@@ -77,6 +81,9 @@ Container emailField(bool? isWriteAble, String label, BuildContext context) {
           hintStyle: TextStyle(
               color: Colors.grey.withOpacity(0.5), fontFamily: 'iransans')),
       cursorColor: kBaseColor2,
+      onChanged: (value) {
+        NurseSignUp.email = value;
+      },
     ),
   );
 }
@@ -114,8 +121,8 @@ Container ageField(bool? isWriteAble, String label, BuildContext context) {
       cursorColor: kBaseColor2,
       keyboardType: TextInputType.number,
       onChanged: (value) {
-        val = int.parse(value);
-        if (val <= 1350 || val >= 1380) {
+        NurseSignUp.age = int.parse(value);
+        if (val <= 60 || val >= 15) {
           print('سال بین 1350 الی 1380 باید باشد!');
         }
       },
@@ -161,6 +168,9 @@ Container city(bool? isWriteAble, String label, BuildContext context) {
           hintStyle: TextStyle(
               color: Colors.grey.withOpacity(0.5), fontFamily: 'iransans')),
       cursorColor: kBaseColor2,
+      onChanged: (value) {
+        NurseSignUp.cIty = value;
+      },
     ),
   );
 }
@@ -192,6 +202,9 @@ Container phone(bool? isWriteAble, String label, BuildContext context) {
           hintStyle: TextStyle(
               color: Colors.grey.withOpacity(0.5), fontFamily: 'iransans')),
       cursorColor: kBaseColor2,
+      onChanged: (value) {
+        NurseSignUp.phoneNumber = value;
+      },
     ),
   );
 }
@@ -256,6 +269,9 @@ Container workCondition(bool? isWriteAble, String label, BuildContext context) {
           hintStyle: TextStyle(
               color: Colors.grey.withOpacity(0.5), fontFamily: 'iransans')),
       cursorColor: kBaseColor2,
+      onChanged: (value) {
+        NurseSignUp.woRkCondition = value;
+      },
     ),
   );
 }
@@ -297,7 +313,7 @@ Container xpyearField(
       cursorColor: kBaseColor2,
       keyboardType: TextInputType.number,
       onChanged: (value) {
-        xpyearVal = int.parse(value);
+        NurseSignUp.workExperience = int.parse(value);
         if (xpyearVal <= 0 || val >= 50) {
           print('عدد مابین 0 و 50 باید باشد!');
         }

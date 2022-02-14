@@ -5,15 +5,31 @@ import 'package:hamyar/data.dart';
 import 'package:hamyar/models/states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hamyar/net/nurse_model.dart';
+import 'package:hamyar/net/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/custom_surfix_icon.dart';
 import '../../components/form_helper.dart';
+import '../../net/network.dart';
 import '../main_screen/main_screen.dart';
 
 class NurseSignUp extends StatefulWidget {
   const NurseSignUp({Key? key}) : super(key: key);
   static String routeName = '/NurseSignUp';
+
+  static int useriId = 7;
+  static String firstName = '';
+  static String lastName = '';
+  static int age = 18;
+  static String gender = 'M';
+  static String email = '';
+  static String phoneNumber = '';
+  static String imageUrl = '';
+  static String state = '';
+  static String cIty = '';
+  static int workExperience = 0;
+  static String woRkCondition = '';
   @override
   _NurseSignUpState createState() => _NurseSignUpState();
 }
@@ -64,7 +80,18 @@ class _NurseSignUpState extends State<NurseSignUp> {
                   padding: const EdgeInsets.all(0),
                 ),
                 onPressed: () {
-                  print('saved');
+                  Network().netCreate(
+                      NurseSignUp.useriId,
+                      NurseSignUp.firstName,
+                      NurseSignUp.lastName,
+                      NurseSignUp.gender,
+                      NurseSignUp.age,
+                      NurseSignUp.email,
+                      NurseSignUp.phoneNumber,
+                      NurseSignUp.state,
+                      NurseSignUp.cIty,
+                      NurseSignUp.workExperience,
+                      NurseSignUp.woRkCondition);
                 },
                 child: const Text(
                   'ارسال آگهی',
@@ -153,11 +180,15 @@ class _NurseSignUpState extends State<NurseSignUp> {
                                               value: isCheckedMan,
                                               onChanged: (value) {
                                                 isCheckedfemale == true
-                                                    ? isCheckedfemale = false
+                                                    ? (isCheckedfemale = false)
                                                     : isCheckedfemale = false;
+
                                                 setState(() {
                                                   isCheckedMan = value!;
                                                 });
+                                                isCheckedfemale
+                                                    ? NurseSignUp.gender = 'F'
+                                                    : NurseSignUp.gender = 'M';
                                               },
                                             ), //Checkbox
                                           ], //<Widget>[]
@@ -183,6 +214,9 @@ class _NurseSignUpState extends State<NurseSignUp> {
                                                 setState(() {
                                                   isCheckedfemale = value!;
                                                 });
+                                                isCheckedMan
+                                                    ? NurseSignUp.gender = 'M'
+                                                    : NurseSignUp.gender = 'F';
                                               },
                                             ), //Checkbox
                                           ], //<Widget>[]
@@ -271,18 +305,29 @@ class _NurseSignUpState extends State<NurseSignUp> {
               children: [
                 IconButton(
                     onPressed: () async {
+                      bool hasAds = false;
+                      /*List<Nurse> nurse = WelcomeScreen.nurseList
+                          .where((element) => element.id == '10')
+                          .toList();
+                      if (nurse[0].firstName == null ||
+                          nurse[0].firstName == '')
+                        hasAds = false;
+                      else
+                        hasAds = true;*/
                       bool isLogedin = false;
                       SharedPreferences _prefs =
                           await SharedPreferences.getInstance();
+                      //check user is login or not
                       if (_prefs.getString('token') == null ||
-                          _prefs.getString('token') == '')
-                        bool isLogedin = false;
-                      else
+                          _prefs.getString('token') == '') {
+                        isLogedin = false;
+                      } else {
                         isLogedin = true;
+                      }
 
                       Navigator.pushNamedAndRemoveUntil(context,
                           MainScreen.routeName, (Route<dynamic> route) => false,
-                          arguments: HomeArg(isLogedin));
+                          arguments: HomeArg(isLogedin, true));
                     },
                     icon: const Icon(
                       Icons.arrow_back,
@@ -427,6 +472,7 @@ class _StetesListProviderState extends State<StetesListProvider> {
                                   states[index].isSelected == false
                                       ? states[index].isSelected = true
                                       : states[index].isSelected = false;
+                                  NurseSignUp.state = index.toString();
                                 });
                               },
                               child: Card(
@@ -456,7 +502,9 @@ class _StetesListProviderState extends State<StetesListProvider> {
                 style: TextStyle(
                     fontFamily: 'iransans', fontSize: 17, color: Colors.white),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           )
         ]),

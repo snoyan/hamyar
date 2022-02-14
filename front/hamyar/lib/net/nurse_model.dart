@@ -1,5 +1,6 @@
 class Nurse {
   String? id;
+  int? userId;
   String? firstName;
   String? lastName;
   int? age;
@@ -16,6 +17,7 @@ class Nurse {
 
   Nurse({
     this.id,
+    this.userId,
     this.firstName,
     this.lastName,
     this.age,
@@ -33,27 +35,35 @@ class Nurse {
 
   Nurse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    userId = json['userID'];
     firstName = json['firstName'];
     lastName = json['lastName'];
     age = json['age'];
     gender = json['gender'];
+    email = json['email'];
     phoneNumber = json['phoneNumber'];
     imageUrl = json['imageUrl'];
+    state = json['state'];
+    city = json['city'];
+    workExperience = json['workExperience'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['age'] = this.age;
-    data['age'] = this.age;
-    data['gender'] = this.gender;
-    data['phoneNumber'] = this.phoneNumber;
-    data['imageUrl'] = this.imageUrl;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userID'] = userId;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['age'] = age;
+    data['gender'] = gender;
+    data['email'] = email;
+    data['phoneNumber'] = phoneNumber;
+    data['imageUrl'] = imageUrl;
+    data['state'] = state;
+    data['city'] = city;
+    data['workExperience'] = workExperience;
     return data;
   }
 
   @override
-  toString() => this.toJson().toString();
+  toString() => toJson().toString();
 }

@@ -19,7 +19,7 @@ final Map<String, WidgetBuilder> myRoutes = {
   MainScreen.routeName: (context) => MainScreen(),
   AdsScreen.routeName: (context) =>
       AdsScreen(stateindex: MainScreen.selectedState),
-  NurseInfo.routeName: (context) => const NurseInfo(),
+  NurseInfo.routeName: (context) => NurseInfo(),
   SearchScreen.routeName: (cosntext) => const SearchScreen(),
   SignUpScreen.routeName: (context) => const SignUpScreen(),
   SetState.routeName: (context) => const SetState(),

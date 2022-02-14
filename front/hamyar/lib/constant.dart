@@ -15,12 +15,16 @@ const Color kBaseColor3 = Color(0xff97999b);
 const Color kBaseColor4 = Color(0xff104581);
 
 ///Classic Blueconst
-const Color kBaseColor5 = Color(0xFFAA95FA); ///
+const Color kBaseColor5 = Color(0xFFAA95FA);
 
-enum Gender { female,male }
+///
+
+enum Gender { female, male }
 
 final RegExp emailValidatorRegExp =
     RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+final RegExp numberValidatetor =
+    RegExp(r'09(1[0-9]|3[1-9]|2[1-9])-?[0-9]{3}-?[0-9]{4}');
 const String kEmailNullError = "لطفا ایمیل خود را وارد کنید";
 const String kInvalidEmailError = "ایمیل وارد شده نا معتبر است!";
 const String kPassNullError = "رمز عبور خود را وارد کنید";

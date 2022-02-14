@@ -3,6 +3,7 @@ import 'package:hamyar/net/endpints.dart';
 import 'package:hamyar/screens/main_screen/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constant.dart';
+import '../models/rate.dart';
 import '../net/network.dart';
 import '../net/nurse_model.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -17,6 +18,7 @@ const spinkit = SpinKitPouringHourGlass(
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
   static List<Nurse> nurseList = [];
+  static List<Rate> Rates = [];
   static String routeName = '/welcome_screen';
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -44,10 +46,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           bool isLogedin = false;
         else
           isLogedin = true;
+        WelcomeScreen.Rates = await Network().getRate();
 
         //await Future.delayed(Duration(seconds: 4));
         Navigator.pushNamed(context, '/main_screen',
-            arguments: HomeArg(isLogedin));
+            arguments: HomeArg(isLogedin, false));
       }
     } on SocketException catch (_) {
       print('not connected');

@@ -1,7 +1,10 @@
 // ignore_for_file: implementation_imports, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:hamyar/screens/main_screen/main_screen.dart';
+import 'package:hamyar/screens/set_state.dart/setState_screen.dart';
 import 'package:provider/src/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constant.dart';
 import '../../data.dart';
 import 'components/advertising.dart';
@@ -79,8 +82,14 @@ class HeadLine extends StatelessWidget {
                 child: FloatingActionButton.small(
                   heroTag: const Text('btn3'),
                   backgroundColor: Colors.black,
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/search_screen");
+                  onPressed: () async {
+                    SharedPreferences _prefs =
+                        await SharedPreferences.getInstance();
+                    _prefs.remove('token');
+                    // _prefs.remove('id');
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, MainScreen.routeName, (route) => false,
+                        arguments: HomeArg(false, false));
                   },
                   child: const Icon(
                     Icons.login,

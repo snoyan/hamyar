@@ -1,6 +1,9 @@
 import 'package:hamyar/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hamyar/models/rate.dart';
+import 'package:hamyar/net/network.dart';
+import 'package:hamyar/net/welcome_screen.dart';
 import '../../components/default_button.dart';
 import '../../components/form_helper.dart';
 import '../../net/nurse_model.dart';
@@ -24,7 +27,7 @@ class NurseInfo extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return RatingPopUp();
+                  return RatingPopUp(nurse: agrs.nurse);
                 });
           },
           child: const Icon(
@@ -135,13 +138,16 @@ class NurseInfo extends StatelessWidget {
 }
 
 class RatingPopUp extends StatefulWidget {
-  const RatingPopUp({Key? key}) : super(key: key);
+  Nurse nurse;
+  RatingPopUp({Key? key, required this.nurse}) : super(key: key);
 
   @override
   _RatingPopUpState createState() => _RatingPopUpState();
 }
 
 class _RatingPopUpState extends State<RatingPopUp> {
+  late String number;
+  bool numberError = false;
   bool isPhoneNumRegistered = false;
   @override
   Widget build(BuildContext context) {
@@ -167,7 +173,7 @@ class _RatingPopUpState extends State<RatingPopUp> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Padding(
-            padding: const EdgeInsets.only(bottom: 40),
+            padding: const EdgeInsets.only(bottom: 20),
             child: Text(
               'جهت ثبت امتیاز شماره موبایل \n          خود را وارد کنید',
               style: TextStyle(
@@ -178,11 +184,11 @@ class _RatingPopUpState extends State<RatingPopUp> {
                   color: Colors.black),
             ),
           ),
-          // phone(true, "شماره موبایل", context)
           SizedBox(
             height: 60,
             width: 300,
             child: TextFormField(
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   fillColor: Colors.white,
                   focusedBorder: OutlineInputBorder(
@@ -206,19 +212,47 @@ class _RatingPopUpState extends State<RatingPopUp> {
                   hintStyle: TextStyle(
                       color: Colors.grey.withOpacity(0.5),
                       fontFamily: 'iransans')),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  if (!numberValidatetor.hasMatch(value)) {
+                    setState(() {
+                      numberError = true;
+                    });
+                  } else {}
+                }
+              },
+              onChanged: (value) {
+                number = value;
+              },
               cursorColor: kBaseColor2,
             ),
           ),
+          numberError ? Text('شماره وارد شده صحیح نمیباشد') : Container(),
           DefaultButton(
             color: kBaseColor5,
             text: 'تایید',
             press: () {
-              Navigator.pop(context);
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return giveRate(context);
-                  });
+              List<Rate> rateList = WelcomeScreen.Rates.where((element) =>
+                      element.nurseId == int.parse(widget.nurse.id.toString()))
+                  .toList();
+              if (number != null && number != '') {
+                for (int i = 0; i < rateList.length; i++) {
+                  if (rateList[i].phoneNumber == number) {
+                    print("this number is exists");
+                    break;
+                  } else {
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return giveRate(context);
+                        });
+                    break;
+                  }
+                }
+              } else
+                print('number is empty');
+              //check is that number exists in the list or not
             },
           )
         ],

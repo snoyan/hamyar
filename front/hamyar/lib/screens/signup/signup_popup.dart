@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hamyar/screens/nurse_signPage/nurse_signPage.dart';
 
 import '../../components/custom_surfix_icon.dart';
 import '../../components/default_button.dart';
 import '../../components/form_error.dart';
 import '../../constant.dart';
+import '../../net/network.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({ Key? key }) : super(key: key);
-static String routeName = "/sign_up";
+  const SignUpScreen({Key? key}) : super(key: key);
+  static String routeName = "/sign_up";
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -36,77 +38,77 @@ class _SignUpScreenState extends State<SignUpScreen> {
         errors.remove(error);
       });
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        body: SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.08), // 4%
-                  Text("ثبت نام", style: TextStyle(
-                    fontFamily: "Iransans",
-                    //123456
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold
-                  ),),
-                  SizedBox(height: 8,),
-                  Text(
-                    "جهت ثبت نام اطلاعات زیر را تکمیل کرده و ثبت نام کنید!",
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    buildEmailFormField(),
-                    SizedBox(height: 30),
-                    buildUsernameFormField(),
-                    SizedBox(height: 30),
-                    buildPasswordFormField(),
-                    SizedBox(height: 30),
-                    buildConformPassFormField(),
-                    FormError(errors: errors),
-                    SizedBox(height: 40),
-                    DefaultButton(
-                      text: "ثبت نام",
-                      press: () async{/*
-
-                        // if all are valid then go to success screen and then go to home screen
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          // Creates a new Woocommerce customer and returns the WooCustomer object.
-                          try {
-                            setState(() {
-                              showSpinner = true;
-                            });
-                            WooCustomer user = WooCustomer(
-                                username: userName, password: password, email: email);
-                            final result =
-                            await NetworkHelper().wooCommerce.createCustomer(user);
-                            print(result);
-                            if (result != null) {
-                              Navigator.pushNamed(context, LoginScreen.routeName);
-                            }
-                            setState(() {
-                              showSpinner = false;
-                            });
-                          } catch (e) {
-                            print(e);
-                          }
-                        }*/
-                      },
-                    ),
-                  ],
+    return Scaffold(
+      body: SizedBox(
+        width: double.infinity,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08), // 4%
+                Text(
+                  "ثبت نام",
+                  style: TextStyle(
+                      fontFamily: "Iransans",
+                      //123456
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
                 ),
-              ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-                   /* Row(
+                SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  "جهت ثبت نام اطلاعات زیر را تکمیل کرده و ثبت نام کنید!",
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      buildEmailFormField(),
+                      SizedBox(height: 30),
+                      buildUsernameFormField(),
+                      SizedBox(height: 30),
+                      buildPasswordFormField(),
+                      SizedBox(height: 30),
+                      buildConformPassFormField(),
+                      FormError(errors: errors),
+                      SizedBox(height: 40),
+                      DefaultButton(
+                        text: "ثبت نام",
+                        press: () async {
+                          // if all are valid then go to success screen and then go to home screen
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+
+                            // Creates a new Woocommerce customer and returns the WooCustomer object.
+                            try {
+                              setState(() {
+                                showSpinner = true;
+                              });
+                              Network().creatUser(email!, userName!, password!);
+                              setState(() {
+                                showSpinner = false;
+                              });
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  NurseSignUp.routeName, (route) => false);
+                            } catch (e) {
+                              print(e);
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                /* Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SocalCard(
@@ -123,20 +125,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ],
                     ),*/
-                    SizedBox(height: 20),
-                    Text(
-                      'ثبت نام شما به منزله ی  \تایید قوانین فروشگاه آلفا میباشد',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.caption,
-                    )
-                  ],
-                ),
-              ),
+                SizedBox(height: 20),
+                Text(
+                  'ثبت نام شما به منزله ی  \تایید قوانین فروشگاه آلفا میباشد',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.caption,
+                )
+              ],
             ),
           ),
-        
+        ),
+      ),
     );
-
   }
 
   TextFormField buildConformPassFormField() {
@@ -164,7 +164,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: InputDecoration(
         labelText: "تایید رمز عبور",
         hintText: "دوباره رمز را وارد کنید",
-
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
       ),
@@ -178,7 +177,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: kPassNullError);
-        }  if (value.length >= 8) {
+        }
+        if (value.length >= 8) {
           removeError(error: kShortPassError);
         }
         password = value;
@@ -196,7 +196,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: InputDecoration(
         labelText: "رمز عبور",
         hintText: "رمز خود را وارد کنید",
-
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
       ),
@@ -241,7 +240,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: kEmailNullError);
-        }  if (emailValidatorRegExp.hasMatch(value)) {
+        }
+        if (emailValidatorRegExp.hasMatch(value)) {
           removeError(error: kInvalidEmailError);
         }
         return null;
@@ -259,7 +259,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       decoration: InputDecoration(
         labelText: "ایمیل",
         hintText: "ایمیل خود را وارد کنید",
-
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
       ),
