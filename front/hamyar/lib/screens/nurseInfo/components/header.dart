@@ -81,7 +81,9 @@ class Header extends StatelessWidget {
                       width: 15,
                     ),
                     Text(
-                      nurse.rate.toString(),
+                      nurse.rate.toString() == "null"
+                          ? '5'
+                          : nurse.rate.toString(),
                       style: const TextStyle(
                           color: Colors.amber,
                           fontFamily: 'iransans',
