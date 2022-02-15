@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hamyar/net/network.dart';
 
 import '../../components/custom_surfix_icon.dart';
@@ -7,6 +8,11 @@ import '../../components/form_error.dart';
 import '../../constant.dart';
 import '../nurse_signPage/nurse_signPage.dart';
 import 'components/no_account_text.dart';
+
+const spinkit = SpinKitCircle(
+  color: Colors.black,
+  size: 50.0,
+);
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -42,121 +48,141 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.04),
-                  const Text(
-                    "خوش آمدید",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 28,
-                      fontFamily: 'Iransans',
-                      // fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const Text(
-                    "جهت پیوستن به جمع پرستاران میبایست حساب کاربری داشته و یا ثبت نام کنید!  ",
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        buildUsernameFormField(),
-                        const SizedBox(height: 30),
-                        buildPasswordFormField(),
-                        const SizedBox(height: 30),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: remember,
-                              activeColor: kBaseColor2,
-                              onChanged: (value) {
-                                setState(() {
-                                  remember = value;
-                                });
-                              },
+    return WillPopScope(
+      onWillPop: () async => showSpinner == true ? false : true,
+      child: SafeArea(
+          child: Scaffold(
+        body: Center(
+          child: showSpinner == false
+              ? SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.04),
+                          const Text(
+                            "خوش آمدید",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 28,
+                              fontFamily: 'Iransans',
+                              // fontWeight: FontWeight.w700,
                             ),
-                            const Text("مرا به خاطر بسپار"),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () {},
-                              /*() => Navigator.pushNamed(
-                    context, ForgotPasswordScreen.routeName),*/
-                              child: const Text(
-                                "فراموشی رمز عبور",
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline),
-                              ),
-                            )
-                          ],
-                        ),
-                        FormError(errors: errors),
-                        const SizedBox(height: 20),
-                        DefaultButton(
-                          text: "ادامه",
-                          press: () async {
-                            removeError();
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              setState(() {
-                                showSpinner = true;
-                              });
+                          ),
+                          const Text(
+                            "جهت پیوستن به جمع پرستاران میبایست حساب کاربری داشته و یا ثبت نام کنید!  ",
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.08),
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                buildUsernameFormField(),
+                                const SizedBox(height: 30),
+                                buildPasswordFormField(),
+                                const SizedBox(height: 30),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: remember,
+                                      activeColor: kBaseColor2,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          remember = value;
+                                        });
+                                      },
+                                    ),
+                                    const Text("مرا به خاطر بسپار"),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      /*() => Navigator.pushNamed(
+                      context, ForgotPasswordScreen.routeName),*/
+                                      child: const Text(
+                                        "فراموشی رمز عبور",
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                FormError(errors: errors),
+                                const SizedBox(height: 20),
+                                DefaultButton(
+                                  text: "ادامه",
+                                  press: () async {
+                                    removeError();
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                      setState(() {
+                                        showSpinner = true;
+                                      });
 
-                              try {
-                                //Login - Returns the access token on success.
-                                await Network()
-                                    .loginToken(userName!, password!);
+                                      try {
+                                        //Login - Returns the access token on success.
+                                        await Network()
+                                            .loginToken(userName!, password!);
+                                        setState(() {
+                                          showSpinner = false;
+                                        });
+                                        kShowToast(
+                                            context, 'ورود با موفقیت انجام شد');
+                                        Navigator.pushNamed(
+                                            context, NurseSignUp.routeName);
+                                      } catch (e) {
+                                        setState(() {
+                                          showSpinner = false;
+                                        });
+                                        kShowToast(context,
+                                            'خطا در ورود: \n هنگام وارد شدن مشکلی به وجود آمده است');
 
-                                Navigator.pushNamed(
-                                    context, NurseSignUp.routeName);
-                              } catch (e) {
-                                print(e);
-                              }
-                            }
-                          },
-                        ),
-                      ],
+                                        print(e);
+                                      }
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 50),
+                          /* Row(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             SocalCard(
+                               icon: "assets/icons/google-icon.svg",
+                               press: () {},
+                             ),
+                             SocalCard(
+                               icon: "assets/icons/facebook-2.svg",
+                               press: () {},
+                             ),
+                             SocalCard(
+                               icon: "assets/icons/twitter.svg",
+                               press: () {},
+                             ),
+                           ],
+                         ),
+                        */
+
+                          NoAccountText(),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 50),
-                  /* Row(
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                           SocalCard(
-                             icon: "assets/icons/google-icon.svg",
-                             press: () {},
-                           ),
-                           SocalCard(
-                             icon: "assets/icons/facebook-2.svg",
-                             press: () {},
-                           ),
-                           SocalCard(
-                             icon: "assets/icons/twitter.svg",
-                             press: () {},
-                           ),
-                         ],
-                       ),
-                      */
-
-                  NoAccountText(),
-                ],
-              ),
-            ),
-          ),
+                )
+              : spinkit,
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   //Password field styles and builder
