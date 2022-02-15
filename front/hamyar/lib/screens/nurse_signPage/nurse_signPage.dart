@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:hamyar/constant.dart';
 import 'package:hamyar/data.dart';
 import 'package:flutter/material.dart';
+import 'package:hamyar/net/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/form_helper.dart';
 import '../../net/network.dart';
@@ -149,7 +150,7 @@ class _NurseSignUpState extends State<NurseSignUp> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       nameField(true, 'نام', context),
-                                      nameField(true, 'فامیلی', context)
+                                      familyField(true, 'فامیلی', context)
                                     ],
                                   ),
                                   //email field
@@ -320,20 +321,11 @@ class _NurseSignUpState extends State<NurseSignUp> {
                         hasAds = false;
                       else
                         hasAds = true;*/
-                      bool isLogedin = false;
-                      SharedPreferences _prefs =
-                          await SharedPreferences.getInstance();
-                      //check user is login or not
-                      if (_prefs.getString('token') == null ||
-                          _prefs.getString('token') == '') {
-                        isLogedin = false;
-                      } else {
-                        isLogedin = true;
-                      }
 
                       Navigator.pushNamedAndRemoveUntil(context,
                           MainScreen.routeName, (Route<dynamic> route) => false,
-                          arguments: HomeArg(isLogedin, true));
+                          arguments: HomeArg(
+                              WelcomeScreen.isLogedin, WelcomeScreen.hasAds));
                     },
                     icon: const Icon(
                       Icons.arrow_back,

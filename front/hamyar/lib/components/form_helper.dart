@@ -8,7 +8,7 @@ import '../screens/nurse_signPage/nurse_signPage.dart';
 //age value
 int val = 0;
 int xpyearVal = 0;
-//String name and family fields
+//String name  fields
 Container nameField(bool? isWriteAble, String label, BuildContext context) {
   return Container(
     height: 60,
@@ -38,6 +38,41 @@ Container nameField(bool? isWriteAble, String label, BuildContext context) {
       cursorColor: kBaseColor2,
       onChanged: (value) {
         NurseSignUp.firstName = value;
+      },
+    ),
+  );
+}
+
+//family filed
+Container familyField(bool? isWriteAble, String label, BuildContext context) {
+  return Container(
+    height: 60,
+    width: MediaQuery.of(context).size.width * 0.45,
+    child: TextFormField(
+      decoration: InputDecoration(
+          fillColor: Colors.white,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(
+              color: kBaseColor2,
+              width: 2,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(
+              color: kBaseColor2,
+              width: 2.0,
+            ),
+          ),
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.black, fontFamily: 'iransans'),
+          hintText: label,
+          hintStyle: TextStyle(
+              color: Colors.grey.withOpacity(0.5), fontFamily: 'iransans')),
+      cursorColor: kBaseColor2,
+      onChanged: (value) {
+        NurseSignUp.lastName = value;
       },
     ),
   );

@@ -195,7 +195,7 @@ class Network {
         },
         body: jsonEncode(<String, dynamic>{
           // "imageUrl": "https://epic1729.pythonanywhere.com/media/postImage/blockchain.jpg",
-          "userID": useriId,
+          "userId": useriId,
           "firstName": firstName,
           "lastName": lastName,
           "gender": gender,
