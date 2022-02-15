@@ -2,6 +2,7 @@ import 'package:hamyar/models/rate.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../models/user.dart';
 import 'endpints.dart';
 import 'nurse_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,13 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'welcome_screen.dart';
 
 //save token taken from signup user
-void upDateSharedPreferences(
-  String token,
-  /*int id*/
-) async {
+void upDateSharedPreferences(String token, int id) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
   _prefs.setString('token', token);
-  //_prefs.setInt('id', id);
 }
 
 class Network {
@@ -81,7 +78,12 @@ class Network {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> token = json.decode(response.body);
-      upDateSharedPreferences(token['token']);
+      await Network().getUser();
+      List<User> filterdUsers = WelcomeScreen.users
+          .where((element) => element.username == username)
+          .toList();
+
+      upDateSharedPreferences(token['token'], filterdUsers[0].id);
       //return true;
     } else {
       // If the server did not return a 200 OK response,
@@ -91,7 +93,18 @@ class Network {
   }
 
   ////////////////////// put request/////////////////////////
-  void netUpdate(int id, String endpoint) async {
+  void netUpdate({
+    required int id,
+    required String endpoint,
+    required String firstname,
+    required String lastname,
+    required String gender,
+    required String city,
+    required String state,
+    required String workCond,
+    required int age,
+    required String phoneNumber,
+  }) async {
     var url = Uri.parse(
       baseUrl + endpoint + id.toString() + '/',
     );
@@ -104,16 +117,14 @@ class Network {
         },
         body: jsonEncode(<String, dynamic>{
           // "model_pic": "https://epic1729.pythonanywhere.com/media/postImage/blockchain.jpg",
-          "firstName": "neda",
-          "lastName": "khani",
-          "gender": "F",
-          "age": 22,
-          "phoneNumber": "11111111111",
-          "state": "15",
-          "city": "tehran",
-          "workCondition": "tehransar",
-          "rate": 2,
-          "created": "2022-02-09T11:14:01.863888Z"
+          "firstName": firstname,
+          "lastName": lastname,
+          "gender": gender,
+          "age": age,
+          "phoneNumber": phoneNumber,
+          "state": state,
+          "city": city,
+          "workCondition": workCond,
         }),
       );
       if (response.statusCode == 200) {
@@ -141,6 +152,8 @@ class Network {
             'password': password
           }));
       if (response.statusCode == 200 || response.statusCode == 201) {
+        await loginToken(username, password);
+
         print('user is created');
       } else {
         print('user is not create');
@@ -194,6 +207,47 @@ class Network {
       }
     } catch (exception) {
       print(exception);
+    }
+  }
+
+  //////////////////////get user list//////////////////////
+  Future<List<User>> getUser() async {
+    var url = Uri.parse(baseUrl + e_get_user_list);
+
+    try {
+      http.Response response = await http.get(
+        url,
+        headers: <String, String>{
+          'Authorization': apiKey,
+          'Content-Type': "application/json; charset=utf-8",
+        },
+      );
+      if (response.statusCode == 200) {
+        String body = utf8.decode(response.bodyBytes);
+        print(body);
+        print('////////////////////////////////////////');
+
+        print('is correct');
+        var x = json.decode(utf8.decode(response.bodyBytes));
+        // var x = json.decode(response.body);
+        int t = 0;
+        for (var i in x) {
+          WelcomeScreen.users.add(User(
+              id: x[t]['id'],
+              email: x[t]['email'].toString(),
+              username: x[t]['username'].toString()));
+
+          t++;
+        }
+        print(nurses);
+        return WelcomeScreen.users;
+      } else {
+        print('is not correct');
+        return WelcomeScreen.users;
+      }
+    } catch (exception) {
+      print(exception);
+      return WelcomeScreen.users;
     }
   }
 

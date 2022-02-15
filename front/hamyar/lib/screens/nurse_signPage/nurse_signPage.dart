@@ -2,23 +2,17 @@ import 'dart:ui';
 
 import 'package:hamyar/constant.dart';
 import 'package:hamyar/data.dart';
-import 'package:hamyar/models/states.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hamyar/net/nurse_model.dart';
-import 'package:hamyar/net/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../components/custom_surfix_icon.dart';
 import '../../components/form_helper.dart';
 import '../../net/network.dart';
 import '../main_screen/main_screen.dart';
 
 class NurseSignUp extends StatefulWidget {
-  const NurseSignUp({Key? key}) : super(key: key);
+  NurseSignUp({Key? key}) : super(key: key);
   static String routeName = '/NurseSignUp';
 
-  static int useriId = 7;
+  static int useriId = 0;
   static String firstName = '';
   static String lastName = '';
   static int age = 18;
@@ -35,6 +29,14 @@ class NurseSignUp extends StatefulWidget {
 }
 
 class _NurseSignUpState extends State<NurseSignUp> {
+  @override
+  void initState() async {
+    // TODO: implement initState
+    super.initState();
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    NurseSignUp.useriId = _prefs.getInt('id')!;
+  }
+
   bool isCheckedMan = false;
   bool isCheckedfemale = false;
   // ignore: non_constant_identifier_names

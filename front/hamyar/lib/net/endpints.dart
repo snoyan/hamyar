@@ -10,7 +10,7 @@
 //     path('rate/<int:pk>/', views.RateDetail.as_view()),
 // ]
 // ignore_for_file: constant_identifier_names
-const String apiKey = 'Token 9cc35b20972314222648dca2837f67166ae079da';
+const String apiKey = 'Token 8668725e75eb3452a18bd4057ed55aea69f1e656';
 const String baseUrl = 'https://epic1729.pythonanywhere.com/';
 const String e_user = 'api/user/';
 const String e_get_nurse_list = 'api/nurse/list/';

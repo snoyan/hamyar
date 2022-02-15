@@ -1,5 +1,8 @@
 import 'package:hamyar/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:hamyar/models/nurse.dart';
+import 'package:hamyar/net/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
@@ -9,7 +12,18 @@ import '../../nurse_signPage/nurse_signPage.dart';
 
 class EditProfileScreen extends StatefulWidget {
   static String routeName = "/editProfile";
-
+  static int useriId = 0;
+  static String firstName = '';
+  static String lastName = '';
+  static int age = 18;
+  static String gender = 'M';
+  static String email = '';
+  static String phoneNumber = '';
+  static String imageUrl = '';
+  static String state = '';
+  static String cIty = '';
+  static int workExperience = 0;
+  static String woRkCondition = '';
   EditProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -21,18 +35,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool isActive = false;
   int? id;
   String? avatarUrl;
-  String? email = "";
-  String? firstName;
-  String? lastName;
-  String? phone;
-  String? city = "";
-  String? state;
-  String? address;
+
   bool enableFAB = false;
   bool isCheckedMan = false;
   bool isCheckedfemale = false;
   String Age = '0';
   String xpYear = '0';
+  late List<Nurse> filterdNurses;
   // The _onBackPressed is for back to HomeScreen and refresh it by press Android backButton.
   /* Future<bool?> onBackPressed() async {
     Navigator.pushNamedAndRemoveUntil(
@@ -41,8 +50,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 */
   @override
-  void initState() {
+  void initState() async {
     super.initState();
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+
+    filterdNurses = WelcomeScreen.nurseList
+        .where((element) => int.parse(element.id!) == _prefs.getInt('id')!)
+        .cast<Nurse>()
+        .toList();
   }
 
   @override
@@ -76,17 +91,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    nameField(firstName, isActive),
+                    nameField(filterdNurses[0].name, isActive),
                     const SizedBox(
                       width: 4,
                     ),
-                    familyField(lastName, isActive),
+                    familyField(filterdNurses[0].family, isActive),
                   ],
                 ),
-                emailField(email, isActive),
+                emailField(filterdNurses[0].email, isActive),
                 Row(
                   children: [
-                    phoneFiled(phone, isActive),
+                    phoneFiled(filterdNurses[0].phone, isActive),
                     //gender man
                     Container(
                       margin: const EdgeInsets.only(right: 5, bottom: 10),
@@ -180,7 +195,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(
                     width: 4,
                   ),
-                  cityFiled(city, isActive)
+                  cityFiled(filterdNurses[0].city, isActive)
                 ]),
                 const SizedBox(
                   height: 10,
@@ -198,7 +213,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(
                   height: 4,
                 ),
-                addressField(address, isActive),
+                addressField(filterdNurses[0].workConditions, isActive),
                 Container(
                   margin: const EdgeInsets.only(left: 20, right: 20),
                   child: DefaultButton(
@@ -253,8 +268,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding:
-                            EdgeInsets.only(top: 15, bottom: 10, right: 10),
+                        padding: const EdgeInsets.only(
+                            top: 15, bottom: 10, right: 10),
                         child: Text(
                           'استان',
                           style: TextStyle(
@@ -308,15 +323,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onSaved: (newValue) => name = newValue,
         onChanged: (value) {},
         validator: (value) {},
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: "نام",
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: " نام",
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/User.svg"),
@@ -339,15 +354,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onSaved: (newValue) => family = newValue,
         onChanged: (value) {},
         validator: (value) {},
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: "نام خانوادگی",
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: " فامیلی",
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/User.svg"),
@@ -370,15 +385,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onSaved: (newValue) => email2 = newValue,
         onChanged: (value) {},
         validator: (value) {},
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: "ایمیل",
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: " ایمیل",
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/Mail.svg"),
@@ -402,15 +417,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onSaved: (newValue) => phone2 = newValue,
         onChanged: (value) {},
         validator: (value) {},
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: "شماره تماس",
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: "  شماره موبایل",
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/Phone.svg"),
@@ -433,15 +448,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onSaved: (newValue) => city2 = newValue,
         onChanged: (value) {},
         validator: (value) {},
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: "شهر",
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: " شهر",
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/User.svg"),
@@ -464,15 +479,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onSaved: (newValue) => state2 = newValue,
         onChanged: (value) {},
         validator: (value) {},
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: "استان",
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: " استان",
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/User.svg"),
@@ -497,15 +512,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         validator: (value) {},
         minLines: 3,
         maxLines: 3,
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: "اطلاعات و شرایط پرستار",
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: " شرایط و خدمات",
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/receipt.svg"),
@@ -528,15 +543,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onSaved: (newValue) => name = newValue,
         onChanged: (value) {},
         validator: (value) {},
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: 'سال تولد',
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: 'سال تولد',
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/Gift Icon.svg"),
@@ -559,15 +574,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onSaved: (newValue) => xpYear = newValue,
         onChanged: (value) {},
         validator: (value) {},
-        decoration: InputDecoration(
-          focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
-          enabledBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: kBaseColor2)),
+        decoration: const InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: kBaseColor2)),
           labelText: 'تجربه کاری',
-          labelStyle: const TextStyle(color: kBaseColor2),
+          labelStyle: TextStyle(color: kBaseColor2),
           hintText: 'تجربه کاری به سال',
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           suffixIcon: CustomSurffixIcon(
               color: kBaseColor2, svgIcon: "assets/icons/Plus Icon.svg"),

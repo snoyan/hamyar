@@ -4,6 +4,7 @@ import 'package:hamyar/screens/main_screen/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constant.dart';
 import '../models/rate.dart';
+import '../models/user.dart';
 import '../net/network.dart';
 import '../net/nurse_model.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -19,6 +20,7 @@ class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
   static List<Nurse> nurseList = [];
   static List<Rate> Rates = [];
+  static List<User> users = [];
   static String routeName = '/welcome_screen';
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -39,6 +41,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           isTrying = false;
         });
         bool isLogedin = false;
+
         WelcomeScreen.nurseList = await Network().netGet(e_get_nurse_list);
         SharedPreferences _prefs = await SharedPreferences.getInstance();
         if (_prefs.getString('token') == null ||
