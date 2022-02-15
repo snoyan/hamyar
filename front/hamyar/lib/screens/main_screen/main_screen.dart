@@ -222,7 +222,8 @@ class BottomNavItem extends StatelessWidget {
 class HomeArg {
   final bool isLogedin;
   final bool hasAds;
+  final bool refresh;
   //final String message;
 
-  HomeArg(this.isLogedin, this.hasAds);
+  HomeArg(this.isLogedin, this.hasAds, this.refresh);
 }

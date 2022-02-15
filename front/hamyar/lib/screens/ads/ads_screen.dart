@@ -1,6 +1,7 @@
 // ignore_for_file: implementation_imports, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:hamyar/net/welcome_screen.dart';
 import 'package:hamyar/screens/main_screen/main_screen.dart';
 import 'package:hamyar/screens/set_state.dart/setState_screen.dart';
 import 'package:provider/src/provider.dart';
@@ -86,10 +87,13 @@ class HeadLine extends StatelessWidget {
                     SharedPreferences _prefs =
                         await SharedPreferences.getInstance();
                     _prefs.remove('token');
-                    // _prefs.remove('id');
+                    _prefs.remove('id');
+                    WelcomeScreen.isLogedin = false;
+                    WelcomeScreen.hasAds = false;
                     Navigator.pushNamedAndRemoveUntil(
                         context, MainScreen.routeName, (route) => false,
-                        arguments: HomeArg(false, false));
+                        arguments: HomeArg(WelcomeScreen.isLogedin,
+                            WelcomeScreen.hasAds, false));
                   },
                   child: const Icon(
                     Icons.login,

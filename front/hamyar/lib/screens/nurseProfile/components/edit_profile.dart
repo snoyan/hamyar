@@ -1,12 +1,12 @@
 import 'package:hamyar/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:hamyar/models/nurse.dart';
 import 'package:hamyar/net/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
 import '../../../components/form_helper.dart';
+import '../../../net/nurse_model.dart';
 import '../../main_screen/main_screen.dart';
 import '../../nurse_signPage/nurse_signPage.dart';
 //import 'profile_pic.dart';
@@ -26,7 +26,7 @@ class EditProfileScreen extends StatefulWidget {
   static int workExperience = 0;
 
   static String woRkCondition = '';
-  static List<Nurse> filterdNurses = [];
+
   EditProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -52,19 +52,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return true;
   }
 */
-  void NursefilterSet() async {
+  nursefilterSet() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
+    print('${_prefs.getInt('id')}');
 
-    EditProfileScreen.filterdNurses = WelcomeScreen.nurseList
-        .where((element) => element.userId! == _prefs.getInt('id')!)
-        .cast<Nurse>()
+    WelcomeScreen.filterdNurses = await WelcomeScreen.nurseList
+        .where((element) => element.userId == _prefs.getInt('id'))
         .toList();
+    setState(() {});
+    return WelcomeScreen.filterdNurses;
   }
 
   @override
   void initState() {
     super.initState();
-    NursefilterSet();
+    nursefilterSet();
   }
 
   @override
@@ -79,8 +81,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             onPressed: () {
               Navigator.pushNamed(context, '/main_screen',
-                  arguments:
-                      HomeArg(WelcomeScreen.isLogedin, WelcomeScreen.hasAds));
+                  arguments: HomeArg(
+                      WelcomeScreen.isLogedin, WelcomeScreen.hasAds, true));
             }),
         toolbarHeight: 60,
         title: const Text("ویرایش اطلاعات",
@@ -101,19 +103,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     nameField(
-                        EditProfileScreen.filterdNurses[0].name, isActive),
+                        WelcomeScreen.filterdNurses[0].firstName, isActive),
                     const SizedBox(
                       width: 4,
                     ),
                     familyField(
-                        EditProfileScreen.filterdNurses[0].family, isActive),
+                        WelcomeScreen.filterdNurses[0].lastName, isActive),
                   ],
                 ),
-                emailField(EditProfileScreen.filterdNurses[0].email, isActive),
+                emailField(WelcomeScreen.filterdNurses[0].email, isActive),
                 Row(
                   children: [
                     phoneFiled(
-                        EditProfileScreen.filterdNurses[0].phone, isActive),
+                        WelcomeScreen.filterdNurses[0].phoneNumber, isActive),
                     //gender man
                     Container(
                       margin: const EdgeInsets.only(right: 5, bottom: 10),
@@ -213,7 +215,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(
                     width: 4,
                   ),
-                  cityFiled(EditProfileScreen.filterdNurses[0].city, isActive)
+                  cityFiled(WelcomeScreen.filterdNurses[0].city, isActive)
                 ]),
                 const SizedBox(
                   height: 10,
@@ -231,8 +233,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(
                   height: 4,
                 ),
-                addressField(EditProfileScreen.filterdNurses[0].workConditions,
-                    isActive),
+                addressField(
+                    WelcomeScreen.filterdNurses[0].workCondition, isActive),
                 Container(
                   margin: const EdgeInsets.only(left: 20, right: 20),
                   child: DefaultButton(

@@ -83,6 +83,7 @@ class Network {
           .toList();
 
       upDateSharedPreferences(token['token'], filterdUsers[0].id);
+      WelcomeScreen.isLogedin = true;
       SharedPreferences _prefs = await SharedPreferences.getInstance();
       List hasNurse = WelcomeScreen.nurseList
           .where((element) => element.userId == _prefs.getInt('id'))
@@ -209,6 +210,7 @@ class Network {
       );
       if (response.statusCode >= 200 && response.statusCode < 305) {
         print('is created');
+        WelcomeScreen.hasAds = true;
       } else {
         print('is not create');
       }

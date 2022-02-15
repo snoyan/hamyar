@@ -99,6 +99,9 @@ class _NurseSignUpState extends State<NurseSignUp> {
                       NurseSignUp.cIty,
                       NurseSignUp.workExperience,
                       NurseSignUp.woRkCondition);
+                  Navigator.pushNamed(context, MainScreen.routeName,
+                      arguments: HomeArg(
+                          WelcomeScreen.isLogedin, WelcomeScreen.hasAds, true));
                 },
                 child: const Text(
                   'ارسال آگهی',
@@ -324,8 +327,8 @@ class _NurseSignUpState extends State<NurseSignUp> {
 
                       Navigator.pushNamedAndRemoveUntil(context,
                           MainScreen.routeName, (Route<dynamic> route) => false,
-                          arguments: HomeArg(
-                              WelcomeScreen.isLogedin, WelcomeScreen.hasAds));
+                          arguments: HomeArg(WelcomeScreen.isLogedin,
+                              WelcomeScreen.hasAds, false));
                     },
                     icon: const Icon(
                       Icons.arrow_back,

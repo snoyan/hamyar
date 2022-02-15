@@ -22,6 +22,7 @@ class WelcomeScreen extends StatefulWidget {
   static List<Nurse> nurseList = [];
   static List<Rate> Rates = [];
   static List<User> users = [];
+  static List<Nurse> filterdNurses = [];
   static bool isLogedin = false;
   static bool hasAds = false;
   static String routeName = '/welcome_screen';
@@ -70,8 +71,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           print('does not have ads');
         }
         WelcomeScreen.Rates = await Network().getRate();
+        nursefilterSet() async {
+          SharedPreferences _prefs = await SharedPreferences.getInstance();
+          print('${_prefs.getInt('id')}');
+
+          WelcomeScreen.filterdNurses = await WelcomeScreen.nurseList
+              .where((element) => element.userId == _prefs.getInt('id'))
+              .toList();
+          setState(() {});
+          return WelcomeScreen.filterdNurses;
+        }
+
+        nursefilterSet();
         Navigator.pushNamed(context, '/main_screen',
-            arguments: HomeArg(WelcomeScreen.isLogedin, WelcomeScreen.hasAds));
+            arguments:
+                HomeArg(WelcomeScreen.isLogedin, WelcomeScreen.hasAds, false));
       }
     } on SocketException catch (_) {
       print('your device is not connected');
