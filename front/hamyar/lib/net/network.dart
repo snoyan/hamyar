@@ -14,6 +14,7 @@ import 'welcome_screen.dart';
 void upDateSharedPreferences(String token, int id) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
   _prefs.setString('token', token);
+  _prefs.setInt('id', id);
 }
 
 class Network {
@@ -54,7 +55,7 @@ class Network {
         print("rate is ${nurse.rate}");
       }
     }
-    await Future.delayed(Duration(seconds: 10));
+    await Future.delayed(Duration(seconds: 5));
 
     return rates;
   }
@@ -82,6 +83,14 @@ class Network {
           .toList();
 
       upDateSharedPreferences(token['token'], filterdUsers[0].id);
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      List hasNurse = WelcomeScreen.nurseList
+          .where((element) => element.userId == _prefs.getInt('id'))
+          .toList();
+      if (hasNurse.isNotEmpty)
+        WelcomeScreen.hasAds = true;
+      else
+        WelcomeScreen.hasAds = false;
       //return true;
     } else {
       // If the server did not return a 200 OK response,

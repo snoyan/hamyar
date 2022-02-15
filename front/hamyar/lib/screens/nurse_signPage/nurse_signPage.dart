@@ -29,12 +29,16 @@ class NurseSignUp extends StatefulWidget {
 }
 
 class _NurseSignUpState extends State<NurseSignUp> {
-  @override
-  void initState() async {
-    // TODO: implement initState
-    super.initState();
+  void getUserId() async {
     final SharedPreferences _prefs = await SharedPreferences.getInstance();
     NurseSignUp.useriId = _prefs.getInt('id')!;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserId();
   }
 
   bool isCheckedMan = false;

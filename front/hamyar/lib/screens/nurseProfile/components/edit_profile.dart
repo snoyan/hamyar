@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
 import '../../../components/form_helper.dart';
+import '../../main_screen/main_screen.dart';
 import '../../nurse_signPage/nurse_signPage.dart';
 //import 'profile_pic.dart';
 
@@ -23,7 +24,9 @@ class EditProfileScreen extends StatefulWidget {
   static String state = '';
   static String cIty = '';
   static int workExperience = 0;
+
   static String woRkCondition = '';
+  static List<Nurse> filterdNurses = [];
   EditProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -41,7 +44,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool isCheckedfemale = false;
   String Age = '0';
   String xpYear = '0';
-  late List<Nurse> filterdNurses;
+
   // The _onBackPressed is for back to HomeScreen and refresh it by press Android backButton.
   /* Future<bool?> onBackPressed() async {
     Navigator.pushNamedAndRemoveUntil(
@@ -49,15 +52,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return true;
   }
 */
-  @override
-  void initState() async {
-    super.initState();
+  void NursefilterSet() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
 
-    filterdNurses = WelcomeScreen.nurseList
+    EditProfileScreen.filterdNurses = WelcomeScreen.nurseList
         .where((element) => element.userId! == _prefs.getInt('id')!)
         .cast<Nurse>()
         .toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    NursefilterSet();
   }
 
   @override
@@ -71,7 +78,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               size: 24,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushNamed(context, '/main_screen',
+                  arguments:
+                      HomeArg(WelcomeScreen.isLogedin, WelcomeScreen.hasAds));
             }),
         toolbarHeight: 60,
         title: const Text("ویرایش اطلاعات",
@@ -91,17 +100,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    nameField(filterdNurses[0].name, isActive),
+                    nameField(
+                        EditProfileScreen.filterdNurses[0].name, isActive),
                     const SizedBox(
                       width: 4,
                     ),
-                    familyField(filterdNurses[0].family, isActive),
+                    familyField(
+                        EditProfileScreen.filterdNurses[0].family, isActive),
                   ],
                 ),
-                emailField(filterdNurses[0].email, isActive),
+                emailField(EditProfileScreen.filterdNurses[0].email, isActive),
                 Row(
                   children: [
-                    phoneFiled(filterdNurses[0].phone, isActive),
+                    phoneFiled(
+                        EditProfileScreen.filterdNurses[0].phone, isActive),
                     //gender man
                     Container(
                       margin: const EdgeInsets.only(right: 5, bottom: 10),
@@ -139,6 +151,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           setState(() {
                                             isCheckedMan = value!;
                                           });
+                                          isCheckedfemale
+                                              ? NurseSignUp.gender = 'F'
+                                              : NurseSignUp.gender = 'M';
                                         }
                                       : null,
                                 ),
@@ -174,6 +189,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           setState(() {
                                             isCheckedfemale = value!;
                                           });
+                                          isCheckedMan
+                                              ? NurseSignUp.gender = 'M'
+                                              : NurseSignUp.gender = 'F';
                                         }
                                       : null,
                                 ),
@@ -195,7 +213,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(
                     width: 4,
                   ),
-                  cityFiled(filterdNurses[0].city, isActive)
+                  cityFiled(EditProfileScreen.filterdNurses[0].city, isActive)
                 ]),
                 const SizedBox(
                   height: 10,
@@ -213,7 +231,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(
                   height: 4,
                 ),
-                addressField(filterdNurses[0].workConditions, isActive),
+                addressField(EditProfileScreen.filterdNurses[0].workConditions,
+                    isActive),
                 Container(
                   margin: const EdgeInsets.only(left: 20, right: 20),
                   child: DefaultButton(

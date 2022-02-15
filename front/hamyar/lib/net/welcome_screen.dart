@@ -22,6 +22,8 @@ class WelcomeScreen extends StatefulWidget {
   static List<Nurse> nurseList = [];
   static List<Rate> Rates = [];
   static List<User> users = [];
+  static bool isLogedin = false;
+  static bool hasAds = false;
   static String routeName = '/welcome_screen';
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -41,20 +43,35 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         setState(() {
           isTrying = false;
         });
-        bool isLogedin = false;
-        WelcomeScreen.nurseList = await Network().getNurseList();
-        WelcomeScreen.Rates = await Network().getRate();
-        SharedPreferences _prefs = await SharedPreferences.getInstance();
-        if (_prefs.getString('token') == null ||
-            _prefs.getString('token') == '')
-          bool isLogedin = false;
-        else
-          isLogedin = true;
-        WelcomeScreen.Rates = await Network().getRate();
 
-        //await Future.delayed(Duration(seconds: 4));
+        WelcomeScreen.nurseList = await Network().getNurseList();
+
+        WelcomeScreen.Rates = await Network().getRate();
+        //check is login or not
+        SharedPreferences _prefs = await SharedPreferences.getInstance();
+
+        if (_prefs.getString('token') == null ||
+            _prefs.getString('token') == '') {
+          WelcomeScreen.isLogedin = false;
+          print('not login');
+        } else {
+          WelcomeScreen.isLogedin = true;
+          print('is loged in');
+        }
+        //check has ads or not
+        List hasNurse = WelcomeScreen.nurseList
+            .where((element) => element.userId == _prefs.getInt('id'))
+            .toList();
+        if (hasNurse.isNotEmpty) {
+          WelcomeScreen.hasAds = true;
+          print('hasAds');
+        } else {
+          WelcomeScreen.hasAds = false;
+          print('does not have ads');
+        }
+        WelcomeScreen.Rates = await Network().getRate();
         Navigator.pushNamed(context, '/main_screen',
-            arguments: HomeArg(isLogedin, false));
+            arguments: HomeArg(WelcomeScreen.isLogedin, WelcomeScreen.hasAds));
       }
     } on SocketException catch (_) {
       print('your device is not connected');
