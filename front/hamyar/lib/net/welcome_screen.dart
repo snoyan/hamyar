@@ -3,11 +3,7 @@ import 'package:hamyar/net/endpints.dart';
 import 'package:hamyar/screens/main_screen/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constant.dart';
-<<<<<<< HEAD
-import '../models/rate.dart';
 import '../models/user.dart';
-=======
->>>>>>> 9846400ae184e16c8dbb0d1a1931b54ac9ac5073
 import '../net/network.dart';
 import '../net/nurse_model.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -46,13 +42,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           isTrying = false;
         });
         bool isLogedin = false;
-<<<<<<< HEAD
-
-        WelcomeScreen.nurseList = await Network().netGet(e_get_nurse_list);
-=======
         WelcomeScreen.nurseList = await Network().getNurseList();
         WelcomeScreen.Rates = await Network().getRate();
->>>>>>> 9846400ae184e16c8dbb0d1a1931b54ac9ac5073
         SharedPreferences _prefs = await SharedPreferences.getInstance();
         if (_prefs.getString('token') == null ||
             _prefs.getString('token') == '')

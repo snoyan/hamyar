@@ -55,7 +55,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
 
     filterdNurses = WelcomeScreen.nurseList
-        .where((element) => int.parse(element.id!) == _prefs.getInt('id')!)
+        .where((element) => element.userId! == _prefs.getInt('id')!)
         .cast<Nurse>()
         .toList();
   }
