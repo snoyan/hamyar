@@ -32,7 +32,7 @@ class NurseSignUp extends StatefulWidget {
 class _NurseSignUpState extends State<NurseSignUp> {
   void getUserId() async {
     final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    NurseSignUp.useriId = _prefs.getInt('id')!;
+    NurseSignUp.useriId = _prefs.getInt('id') ?? 0;
   }
 
   @override

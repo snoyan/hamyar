@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 const Color kBaseColor0 = Color(0xFFF5F6F9);
 
@@ -20,6 +21,17 @@ const Color kBaseColor5 = Color(0xFFAA95FA);
 ///
 
 enum Gender { female, male }
+
+void kShowToast(BuildContext context, String text) {
+  Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
 
 final RegExp emailValidatorRegExp =
     RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
