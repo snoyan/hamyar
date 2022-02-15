@@ -1,12 +1,13 @@
 import 'package:hamyar/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:hamyar/models/rate.dart';
 import 'package:hamyar/net/network.dart';
 import 'package:hamyar/net/welcome_screen.dart';
 import '../../components/default_button.dart';
 import '../../components/form_helper.dart';
 import '../../net/nurse_model.dart';
+import '../../net/rate_model.dart';
+
 import 'components/header.dart';
 import 'components/nurse_call.dart';
 import 'components/nurse_description.dart';
@@ -233,8 +234,8 @@ class _RatingPopUpState extends State<RatingPopUp> {
             text: 'تایید',
             press: () {
               List<Rate> rateList = WelcomeScreen.Rates.where((element) =>
-                      element.nurseId == int.parse(widget.nurse.id.toString()))
-                  .toList();
+                  element.userId ==
+                  int.parse(widget.nurse.userId.toString())).toList();
               if (number != null && number != '') {
                 for (int i = 0; i < rateList.length; i++) {
                   if (rateList[i].phoneNumber == number) {

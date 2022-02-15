@@ -1,5 +1,6 @@
-import 'package:hamyar/models/rate.dart';
-import 'package:html/parser.dart';
+// ignore_for_file: avoid_print
+
+import 'package:hamyar/net/rate_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/user.dart';
@@ -19,46 +20,43 @@ class Network {
   List<Nurse> nurses = [];
   List<Rate> rates = [];
 
-  String parseHtmlString(String htmlString) {
-    final document = parse(htmlString);
-    final String parsedString =
-        parse(document.body!.text).documentElement!.text;
-    return parsedString;
-  }
-
 //////////////get rates//////////////////////
   Future<List<Rate>> getRate() async {
-    var url = Uri.parse(
-      baseUrl + e_get_rate,
-    );
-    try {
-      http.Response response = await http.get(
-        url,
-        headers: <String, String>{
-          'Authorization': apiKey,
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-      if (response.statusCode >= 200 && response.statusCode < 305) {
-        print('rate has goten' + response.body);
+    var list = await netGet(e_get_rate);
+    int t = 0;
 
-        var list = json.decode(response.body);
-        int t = 0;
-        for (var i in list) {
-          rates.add(Rate(
-              nurseId: list[t]['nurse'],
-              phoneNumber: list[t]['phoneNumber'],
-              rate: list[t]['rate']));
-          t++;
-        }
-        return rates;
-      } else {
-        throw Exception('Failed to load rates');
-      }
-    } catch (exception) {
-      print(exception);
-      return rates;
+    for (var i in list) {
+      if (WelcomeScreen.nurseList[t].userId == list[t]['nurseId']) {}
+      rates.add(Rate(
+        id: list[t]['id'],
+        userId: list[t]['userId'],
+        phoneNumber: list[t]['phoneNumber'],
+        rate: list[t]['rate'],
+        created: list[t]['created'],
+      ));
+      t++;
     }
+    int counter = 0;
+    int sum = 0;
+    for (Nurse nurse in WelcomeScreen.nurseList) {
+      counter = 0;
+      sum = 0;
+      for (int i = 0; i < rates.length; i++) {
+        if (nurse.userId == rates[i].userId) {
+          sum += rates[i].rate!;
+          rates.remove(rates[i]);
+          counter++;
+        }
+      }
+      if (sum > 0) {
+        nurse.rate = (sum ~/ counter) as int?;
+        print('//////////////////////////////');
+        print("rate is ${nurse.rate}");
+      }
+    }
+    await Future.delayed(Duration(seconds: 10));
+
+    return rates;
   }
   //////////////////////// login request/////////////////////////
 
@@ -252,7 +250,7 @@ class Network {
   }
 
 ////////////////////// get request//////////////////////////
-  Future<List<Nurse>> netGet(String endpoint) async {
+  Future<dynamic> netGet(String endpoint) async {
     var url = Uri.parse(
       baseUrl + endpoint,
     );
@@ -264,57 +262,17 @@ class Network {
           'Content-Type': "application/json; charset=utf-8",
         },
       );
+
       if (response.statusCode == 200) {
-        String body = utf8.decode(response.bodyBytes);
-        print(body);
-        print('////////////////////////////////////////');
-
-        print('is correct');
+        // String body = utf8.decode(response.bodyBytes);
+        print('request has completed');
         var x = json.decode(utf8.decode(response.bodyBytes));
-        // var x = json.decode(response.body);
-        int t = 0;
-        for (var i in x) {
-          nurses.add(Nurse(
-            id: x[t]['id'].toString(),
-            firstName: x[t]['firstName'],
-            lastName: x[t]['lastName'],
-            gender: x[t]['gender'],
-            age: x[t]['age'],
-            email: x[t]['email'].toString(),
-            phoneNumber: x[t]['phoneNumber'],
-            imageUrl: x[t]['imageUrl'],
-            state: x[t]['state'],
-            city: x[t]['city'],
-            workExperience: x[t]['workExperience'],
-            workCondition: x[t]['workCondition'],
-            rate: x[t]['rate'],
-            created: x[t]['created'].toString(),
-          ));
-
-          t++;
-        }
-        print(nurses);
-        return nurses;
-        // var image;
-        // image = x[1]['model_pic'];
-        // var firstName = x[1]['firstName'];
-        // var lastName = x[1]['lastName'];
-        // var gender = x[1]['gender'];
-        // var age = x[1]['age'];
-        // var phoneNumber = x[1]['phoneNumber'];
-
-        // print('firstName : $firstName');
-        // print('lastName : $lastName');
-        // print('age : $age');
-        // print('gender : $gender');
-        // print('phoneNumber : $phoneNumber');
+        return x;
       } else {
-        print('is not correct');
-        return nurses;
+        print('request has not completed');
       }
     } catch (exception) {
       print(exception);
-      return nurses;
     }
   }
 
@@ -339,5 +297,51 @@ class Network {
     } catch (exception) {
       print(exception);
     }
+  }
+
+  Future<List<Nurse>> getNurseList() async {
+    var x = await netGet(e_get_nurse_list);
+    int t = 0;
+    for (var i in x) {
+      nurses.add(Nurse(
+        userId: x[t]['userId'],
+        firstName: x[t]['firstName'],
+        lastName: x[t]['lastName'],
+        gender: x[t]['gender'],
+        age: x[t]['age'],
+        email: x[t]['email'].toString(),
+        phoneNumber: x[t]['phoneNumber'],
+        imageUrl: x[t]['imageUrl'],
+        state: x[t]['state'],
+        city: x[t]['city'],
+        workExperience: x[t]['workExperience'],
+        workCondition: x[t]['workCondition'],
+        created: x[t]['created'].toString(),
+      ));
+
+      t++;
+    }
+    return nurses;
+  }
+
+  Future<Nurse> getNurseDetail(int id) async {
+    var x = await netGet(e_get_nurse_list);
+    Nurse nurse = Nurse(
+      userId: x[id]['userId'],
+      firstName: x[id]['firstName'],
+      lastName: x[id]['lastName'],
+      gender: x[id]['gender'],
+      age: x[id]['age'],
+      email: x[id]['email'].toString(),
+      phoneNumber: x[id]['phoneNumber'],
+      imageUrl: x[id]['imageUrl'],
+      state: x[id]['state'],
+      city: x[id]['city'],
+      workExperience: x[id]['workExperience'],
+      workCondition: x[id]['workCondition'],
+      created: x[id]['created'].toString(),
+    );
+
+    return nurse;
   }
 }
