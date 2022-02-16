@@ -52,7 +52,7 @@ class _NurseSignUpState extends State<NurseSignUp> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
+        /*  floatingActionButton: FloatingActionButton.extended(
           extendedPadding: const EdgeInsets.only(right: 5, left: 10),
           onPressed: () {},
           label: Row(
@@ -71,7 +71,7 @@ class _NurseSignUpState extends State<NurseSignUp> {
               )
             ],
           ),
-        ),
+        ),*/
         backgroundColor: kBaseColor0,
         bottomNavigationBar: Container(
           height: 60,

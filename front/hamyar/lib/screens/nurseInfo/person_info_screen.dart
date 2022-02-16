@@ -51,7 +51,7 @@ class NurseInfo extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
+                /*  SizedBox(
                   height: 45,
                   width: MediaQuery.of(context).size.width * 0.39,
                   child: ElevatedButton(
@@ -80,10 +80,10 @@ class NurseInfo extends StatelessWidget {
                 ),
                 const SizedBox(
                   width: 15,
-                ),
+                ),*/
                 SizedBox(
                   height: 45,
-                  width: MediaQuery.of(context).size.width * 0.39,
+                  width: MediaQuery.of(context).size.width * 0.8,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       fixedSize: const Size(70, 0),
@@ -125,6 +125,7 @@ class NurseInfo extends StatelessWidget {
                 ),
                 Header(
                   nurse: agrs.nurse,
+                  rate: agrs.rate,
                 ),
                 NurseInformation(agrs: agrs),
                 const SizedBox(
@@ -338,6 +339,6 @@ class _RatingPopUpState extends State<RatingPopUp> {
 
 class NurseDetailsArguments {
   final Nurse nurse;
-
-  NurseDetailsArguments({required this.nurse});
+  final String rate;
+  NurseDetailsArguments(this.nurse, this.rate);
 }

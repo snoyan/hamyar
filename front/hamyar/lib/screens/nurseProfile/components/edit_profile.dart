@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
 import '../../../components/form_helper.dart';
+import '../../../data.dart';
+import '../../../net/network.dart';
 import '../../../net/nurse_model.dart';
 import '../../main_screen/main_screen.dart';
 import '../../nurse_signPage/nurse_signPage.dart';
@@ -40,7 +42,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? avatarUrl;
 
   bool enableFAB = false;
-  bool isCheckedMan = false;
+  bool isCheckedMan = true;
   bool isCheckedfemale = false;
   String Age = '0';
   String xpYear = '0';
@@ -52,6 +54,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return true;
   }
 */
+  genderCheck() {
+    if (WelcomeScreen.filterdNurses[0] == "M")
+      isCheckedMan = true;
+    else
+      isCheckedMan = false;
+
+    if (WelcomeScreen.filterdNurses[0] == "F")
+      isCheckedfemale = true;
+    else
+      isCheckedfemale = false;
+  }
+
   nursefilterSet() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     print('${_prefs.getInt('id')}');
@@ -67,6 +81,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     nursefilterSet();
+    genderCheck();
   }
 
   @override
@@ -154,8 +169,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             isCheckedMan = value!;
                                           });
                                           isCheckedfemale
-                                              ? NurseSignUp.gender = 'F'
-                                              : NurseSignUp.gender = 'M';
+                                              ? EditProfileScreen.gender = 'F'
+                                              : EditProfileScreen.gender = 'M';
                                         }
                                       : null,
                                 ),
@@ -192,8 +207,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             isCheckedfemale = value!;
                                           });
                                           isCheckedMan
-                                              ? NurseSignUp.gender = 'M'
-                                              : NurseSignUp.gender = 'F';
+                                              ? EditProfileScreen.gender = 'M'
+                                              : EditProfileScreen.gender = 'F';
                                         }
                                       : null,
                                 ),
@@ -223,11 +238,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AgeField(Age, isActive),
+                    AgeField(WelcomeScreen.filterdNurses[0].age.toString(),
+                        isActive),
                     const SizedBox(
                       width: 4,
                     ),
-                    xpYears(xpYear, isActive),
+                    xpYears(
+                        WelcomeScreen.filterdNurses[0].workExperience
+                            .toString(),
+                        isActive),
                   ],
                 ),
                 const SizedBox(
@@ -241,6 +260,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       color: isActive ? Colors.green : kBaseColor2,
                       text: isActive ? "ذخیره" : "ویرایش",
                       press: () {
+                        if (isActive == false) {
+                          Network().netUpdate(
+                              id: WelcomeScreen.filterdNurses[0].id!,
+                              firstname: EditProfileScreen.firstName,
+                              lastname: EditProfileScreen.lastName,
+                              gender: EditProfileScreen.gender,
+                              city: EditProfileScreen.cIty,
+                              state: EditProfileScreen.state,
+                              workCond: EditProfileScreen.woRkCondition,
+                              age: EditProfileScreen.age,
+                              phoneNumber: EditProfileScreen.phoneNumber);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, MainScreen.routeName, (route) => false,
+                              arguments: HomeArg(WelcomeScreen.isLogedin,
+                                  WelcomeScreen.hasAds, false));
+                        }
                         setState(() {
                           isActive = !isActive;
                         });
@@ -292,7 +327,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         padding: const EdgeInsets.only(
                             top: 15, bottom: 10, right: 10),
                         child: Text(
-                          'استان',
+                          states[int.parse(
+                                  WelcomeScreen.filterdNurses[0].state!)]
+                              .stateName,
                           style: TextStyle(
                               color: isActive
                                   ? Colors.black.withOpacity(0.5)
@@ -342,7 +379,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => name = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.firstName = value;
+        },
         validator: (value) {},
         decoration: const InputDecoration(
           focusedBorder:
@@ -373,7 +412,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => family = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.firstName = value;
+        },
         validator: (value) {},
         decoration: const InputDecoration(
           focusedBorder:
@@ -404,7 +445,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => email2 = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.email = value;
+        },
         validator: (value) {},
         decoration: const InputDecoration(
           focusedBorder:
@@ -436,7 +479,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => phone2 = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.phoneNumber = value;
+        },
         validator: (value) {},
         decoration: const InputDecoration(
           focusedBorder:
@@ -467,7 +512,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => city2 = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.cIty = value;
+        },
         validator: (value) {},
         decoration: const InputDecoration(
           focusedBorder:
@@ -498,7 +545,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => state2 = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.state = value;
+        },
         validator: (value) {},
         decoration: const InputDecoration(
           focusedBorder:
@@ -529,7 +578,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => address2 = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.woRkCondition = value;
+        },
         validator: (value) {},
         minLines: 3,
         maxLines: 3,
@@ -562,7 +613,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => name = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.age = int.parse(value);
+        },
         validator: (value) {},
         decoration: const InputDecoration(
           focusedBorder:
@@ -593,7 +646,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         enabled: isWriteAble,
         keyboardType: TextInputType.emailAddress,
         onSaved: (newValue) => xpYear = newValue,
-        onChanged: (value) {},
+        onChanged: (value) {
+          EditProfileScreen.workExperience = int.parse(value);
+        },
         validator: (value) {},
         decoration: const InputDecoration(
           focusedBorder:

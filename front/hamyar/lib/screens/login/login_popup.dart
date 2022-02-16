@@ -6,6 +6,8 @@ import '../../components/custom_surfix_icon.dart';
 import '../../components/default_button.dart';
 import '../../components/form_error.dart';
 import '../../constant.dart';
+import '../../net/welcome_screen.dart';
+import '../main_screen/main_screen.dart';
 import '../nurse_signPage/nurse_signPage.dart';
 import 'components/no_account_text.dart';
 
@@ -136,8 +138,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                         });
                                         kShowToast(
                                             context, 'ورود با موفقیت انجام شد');
-                                        Navigator.pushNamed(
-                                            context, NurseSignUp.routeName);
+                                        if (WelcomeScreen.hasAds)
+                                          Navigator.pushNamedAndRemoveUntil(
+                                              context,
+                                              MainScreen.routeName,
+                                              (route) => false,
+                                              arguments: HomeArg(
+                                                  WelcomeScreen.isLogedin,
+                                                  WelcomeScreen.hasAds,
+                                                  false));
+                                        else
+                                          Navigator.pushNamedAndRemoveUntil(
+                                              context,
+                                              NurseSignUp.routeName,
+                                              (route) => false);
                                       } catch (e) {
                                         setState(() {
                                           showSpinner = false;

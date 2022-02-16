@@ -4,6 +4,8 @@ import 'package:hamyar/net/rate_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/user.dart';
+import '../screens/ads/components/advertising.dart';
+import '../screens/main_screen/main_screen.dart';
 import 'endpints.dart';
 import 'nurse_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,11 +17,21 @@ void upDateSharedPreferences(String token, int id) async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
   _prefs.setString('token', token);
   _prefs.setInt('id', id);
+  // _prefs.setString('selectedState', selectedState);
 }
 
 class Network {
   List<Nurse> nurses = [];
   List<Rate> rates = [];
+  stateNurseList() {
+    Advertising.stateNurses = WelcomeScreen.nurseList
+        .where(
+            (element) => element.state == MainScreen.selectedState.toString())
+        .toList();
+    print('stateNurses length:' + '${Advertising.stateNurses.length}');
+    if (Advertising.stateNurses.isEmpty)
+      Advertising.stateNurses = WelcomeScreen.nurseList;
+  }
 
 //////////////get rates//////////////////////
   Future<List<Rate>> getRate() async {
@@ -55,7 +67,7 @@ class Network {
         print("rate is ${nurse.rate}");
       }
     }
-    await Future.delayed(Duration(seconds: 5));
+    //await Future.delayed(Duration(seconds: 5));
 
     return rates;
   }
@@ -82,7 +94,10 @@ class Network {
           .where((element) => element.username == username)
           .toList();
 
-      upDateSharedPreferences(token['token'], filterdUsers[0].id);
+      upDateSharedPreferences(
+        token['token'],
+        filterdUsers[0].id,
+      );
       WelcomeScreen.isLogedin = true;
       SharedPreferences _prefs = await SharedPreferences.getInstance();
       List hasNurse = WelcomeScreen.nurseList
@@ -103,7 +118,6 @@ class Network {
   ////////////////////// put request/////////////////////////
   void netUpdate({
     required int id,
-    required String endpoint,
     required String firstname,
     required String lastname,
     required String gender,
@@ -114,7 +128,7 @@ class Network {
     required String phoneNumber,
   }) async {
     var url = Uri.parse(
-      baseUrl + endpoint + id.toString() + '/',
+      baseUrl + e_get_nurse_update + id.toString() + '/',
     );
     try {
       http.Response response = await http.put(
@@ -315,6 +329,7 @@ class Network {
     int t = 0;
     for (var i in x) {
       nurses.add(Nurse(
+        id: x[t]['id'],
         userId: x[t]['userId'],
         firstName: x[t]['firstName'],
         lastName: x[t]['lastName'],

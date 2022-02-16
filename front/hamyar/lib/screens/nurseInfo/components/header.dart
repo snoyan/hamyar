@@ -5,8 +5,10 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../../net/nurse_model.dart';
 
 class Header extends StatelessWidget {
-  const Header({required this.nurse, Key? key}) : super(key: key);
+  const Header({required this.nurse, required this.rate, Key? key})
+      : super(key: key);
   final Nurse nurse;
+  final String rate;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,11 +63,15 @@ class Header extends StatelessWidget {
                     RatingBar.builder(
                       maxRating: 10,
                       itemSize: 25,
-                      initialRating: 3,
+                      initialRating: nurse.rate == null
+                          ? double.parse('0')
+                          : double.parse(nurse.rate.toString()) >= 0
+                              ? double.parse(nurse.rate.toString())
+                              : double.parse('0'),
                       ignoreGestures: true,
                       minRating: 1,
                       direction: Axis.horizontal,
-                      allowHalfRating: true,
+                      allowHalfRating: false,
                       itemCount: 5,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                       itemBuilder: (context, x) => const Icon(
@@ -82,7 +88,7 @@ class Header extends StatelessWidget {
                     ),
                     Text(
                       nurse.rate.toString() == "null"
-                          ? '5'
+                          ? '0'
                           : nurse.rate.toString(),
                       style: const TextStyle(
                           color: Colors.amber,

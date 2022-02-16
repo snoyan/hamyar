@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:hamyar/net/welcome_screen.dart';
 import 'package:hamyar/screens/ads/ads_screen.dart';
 import 'package:hamyar/screens/login/login_popup.dart';
 import 'package:hamyar/screens/nurseProfile/components/edit_profile.dart';
@@ -8,22 +9,25 @@ import 'package:hamyar/screens/nurseProfile/profile_screen.dart';
 import 'package:hamyar/screens/nurse_signPage/nurse_signPage.dart';
 import 'package:hamyar/screens/set_state.dart/setState_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constant.dart';
 import '../../data.dart';
+import '../../net/network.dart';
 import 'components/animated_bottom_nav.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key? key}) : super(key: key);
 
   static String routeName = "/main_screen";
-  static int selectedState = 0;
+  static int selectedState = int.parse(WelcomeScreen.selectedState);
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   late int _currentPage;
+  int selectedStateAds = MainScreen.selectedState;
 
   @override
   void initState() {
@@ -135,9 +139,20 @@ class _MainScreenState extends State<MainScreen> {
                   color: Colors.white,
                   size: 32,
                 )),
-                onPressed: () {
+                onPressed: () async {
                   // Navigator.pushNamedAndRemoveUntil(context, AdsScreen.routeName);
+                  SharedPreferences _prefs =
+                      await SharedPreferences.getInstance();
+                  _prefs.setString(
+                      'selectedState', MainScreen.selectedState.toString());
+                  print('selected State ${MainScreen.selectedState}');
+                  MainScreen.selectedState =
+                      int.parse(_prefs.getString('selectedState')!);
+                  Network().stateNurseList();
+
                   setState(() {
+                    selectedStateAds =
+                        int.parse(_prefs.getString('selectedState')!);
                     _currentPage = 0;
                   });
                 },
@@ -151,7 +166,7 @@ class _MainScreenState extends State<MainScreen> {
       case 0:
         return Center(
             child: AdsScreen(
-          stateindex: MainScreen.selectedState,
+          stateindex: selectedStateAds,
         ));
       case 1:
         return const Center(
@@ -223,6 +238,7 @@ class HomeArg {
   final bool isLogedin;
   final bool hasAds;
   final bool refresh;
+  // String selectedState;
   //final String message;
 
   HomeArg(this.isLogedin, this.hasAds, this.refresh);

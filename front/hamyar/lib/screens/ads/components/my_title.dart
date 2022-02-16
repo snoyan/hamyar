@@ -20,10 +20,7 @@ class MyTitle extends StatelessWidget {
             Text(
               label,
               style: const TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontFamily: 'iransans'
-              ),
+                  fontSize: 18, color: Colors.white, fontFamily: 'iransans'),
             ),
           ],
         ),

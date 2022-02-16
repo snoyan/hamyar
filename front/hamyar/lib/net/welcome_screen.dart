@@ -10,6 +10,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:io';
 
+import '../screens/ads/components/advertising.dart';
 import 'rate_model.dart';
 
 const spinkit = SpinKitPouringHourGlass(
@@ -19,6 +20,7 @@ const spinkit = SpinKitPouringHourGlass(
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
+  static String selectedState = '7';
   static List<Nurse> nurseList = [];
   static List<Rate> Rates = [];
   static List<User> users = [];
@@ -71,18 +73,33 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           print('does not have ads');
         }
         WelcomeScreen.Rates = await Network().getRate();
-        nursefilterSet() async {
+
+        /*nursefilterSet() async {
           SharedPreferences _prefs = await SharedPreferences.getInstance();
           print('${_prefs.getInt('id')}');
-
+          if (_prefs.getString('selectedState') == null ||
+              _prefs.getString('selectedState') == '') {
+            _prefs.setString('selectedState', WelcomeScreen.selectedState);
+          } else {
+            WelcomeScreen.selectedState = _prefs.getString('selectedState')!;
+            print('${WelcomeScreen.selectedState}');
+          }
           WelcomeScreen.filterdNurses = await WelcomeScreen.nurseList
               .where((element) => element.userId == _prefs.getInt('id'))
               .toList();
           setState(() {});
           return WelcomeScreen.filterdNurses;
+        }*/
+
+        //nursefilterSet();
+        if (_prefs.getString('selectedState') == null ||
+            _prefs.getString('selectedState') == '') {
+          _prefs.setString('selectedState', WelcomeScreen.selectedState);
+        } else {
+          MainScreen.selectedState =
+              int.parse(_prefs.getString('selectedState')!);
         }
 
-        nursefilterSet();
         Navigator.pushNamed(context, '/main_screen',
             arguments:
                 HomeArg(WelcomeScreen.isLogedin, WelcomeScreen.hasAds, false));

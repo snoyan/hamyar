@@ -3,17 +3,39 @@
 import 'package:hamyar/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hamyar/net/rate_model.dart';
+import 'package:hamyar/net/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../net/nurse_model.dart';
 import '../../nurseInfo/person_info_screen.dart';
 
-class PersonCard extends StatelessWidget {
+class PersonCard extends StatefulWidget {
   final Nurse nurse;
   PersonCard({
     required this.nurse,
     Key? key,
   }) : super(key: key);
+  List<Rate> rated = [];
+  @override
+  State<PersonCard> createState() => _PersonCardState();
+}
+
+class _PersonCardState extends State<PersonCard> {
+  setRate() {
+    widget.rated = WelcomeScreen.Rates.where(
+        (element) => element.userId == widget.nurse.userId).toList();
+    setState(() {});
+  }
+
   double widthcontext = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setRate();
+  }
+
   @override
   Widget build(BuildContext context) {
     widthcontext = MediaQuery.of(context).size.width * 0.4;
@@ -27,16 +49,16 @@ class PersonCard extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ListView(
+            child: Column(
               children: [
-                if (nurse.imageUrl != null)
+                if (widget.nurse.imageUrl != null)
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.18,
+                    height: 130,
                     width: MediaQuery.of(context).size.width * 0.4,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(nurse.imageUrl!),
+                          image: NetworkImage(widget.nurse.imageUrl!),
                         ),
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(500),
@@ -49,7 +71,7 @@ class PersonCard extends StatelessWidget {
                   height: 8,
                 ),
                 Text(
-                  ' ${nurse.firstName} ${nurse.lastName}',
+                  ' ${widget.nurse.firstName} ${widget.nurse.lastName}',
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -57,7 +79,7 @@ class PersonCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 5.0, bottom: 4),
                   child: Text(
-                    'سابقه کار :${nurse.workExperience} سال'
+                    'سابقه کار :${widget.nurse.workExperience} سال'
                     '',
                     style: TextStyle(
                         fontFamily: 'iransans',
@@ -68,7 +90,10 @@ class PersonCard extends StatelessWidget {
                 Center(
                     child: RatingBar.builder(
                   itemSize: 25,
-                  initialRating: 3,
+                  initialRating: (widget.rated.isNotEmpty)
+                      ? double.parse(widget.nurse.rate.toString())
+                      : 0,
+                  //initialRating: 3,
                   ignoreGestures: true,
                   minRating: 1,
                   direction: Axis.horizontal,
@@ -90,7 +115,10 @@ class PersonCard extends StatelessWidget {
       onTap: () {
         print('Pressed');
         Navigator.pushNamed(context, '/person_info',
-            arguments: NurseDetailsArguments(nurse: nurse));
+            arguments: NurseDetailsArguments(
+              widget.nurse,
+              (widget.rated.isNotEmpty) ? widget.rated[0].rate.toString() : '0',
+            ));
       },
     );
   }

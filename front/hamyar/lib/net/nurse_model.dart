@@ -1,4 +1,5 @@
 class Nurse {
+  int? id;
   int? userId;
   String? firstName;
   String? lastName;
@@ -15,6 +16,7 @@ class Nurse {
   String? created;
 
   Nurse({
+    this.id,
     this.userId,
     this.firstName,
     this.lastName,
@@ -32,6 +34,7 @@ class Nurse {
   });
 
   Nurse.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     userId = json['userId'];
     firstName = json['firstName'];
     lastName = json['lastName'];

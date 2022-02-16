@@ -31,10 +31,10 @@ class _AdsScreenState extends State<AdsScreen> {
       body: Column(
         children: [
           HeadLine(stateIndex: widget.stateindex),
-          const MyTitle(label: 'پرستاران برتر'),
+          const MyTitle(label: 'همیاران برتر'),
           const TopNurse(),
           const MyTitle(label: 'آگهی ها'),
-          const Advertising(),
+          Advertising(selectedState: widget.stateindex.toString()),
         ],
       ),
     );

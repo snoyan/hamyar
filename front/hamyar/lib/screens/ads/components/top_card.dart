@@ -4,14 +4,34 @@ import 'package:flutter/material.dart';
 
 import '../../../constant.dart';
 import '../../../net/nurse_model.dart';
+import '../../../net/rate_model.dart';
+import '../../../net/welcome_screen.dart';
 import '../../nurseInfo/person_info_screen.dart';
 
-class TopCard extends StatelessWidget {
+class TopCard extends StatefulWidget {
   final Nurse nurse;
-  const TopCard({
+  TopCard({
     required this.nurse,
     Key? key,
   }) : super(key: key);
+  List<Rate> rated = [];
+  @override
+  State<TopCard> createState() => _TopCardState();
+}
+
+class _TopCardState extends State<TopCard> {
+  setRate() {
+    widget.rated = WelcomeScreen.Rates.where(
+        (element) => element.userId == widget.nurse.userId).toList();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setRate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +52,7 @@ class TopCard extends StatelessWidget {
                   border: Border.all(color: kBaseColor5, width: 4),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(nurse.imageUrl!),
+                    image: NetworkImage(widget.nurse.imageUrl!),
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(50))),
               height: 72.0,
@@ -42,7 +62,10 @@ class TopCard extends StatelessWidget {
       onTap: () {
         print('Pressed');
         Navigator.pushNamed(context, '/person_info',
-            arguments: NurseDetailsArguments(nurse: nurse));
+            arguments: NurseDetailsArguments(
+              widget.nurse,
+              (widget.rated.isNotEmpty) ? widget.rated[0].rate.toString() : '0',
+            ));
       },
     );
   }

@@ -42,7 +42,7 @@ class _SetStateState extends State<SetState> {
                                   states[i].isSelected = false;
                                 setState(() {
                                   states[index].isSelected == false
-                                      ? states[index].isSelected = true
+                                      ? (states[index].isSelected = true)
                                       : states[index].isSelected = false;
                                   MainScreen.selectedState = index;
                                 });
