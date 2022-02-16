@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hamyar">
+     <uses-permission android:name="android.permission.INTERNET"/>flutter build apk 
    <application
         android:label="hamyar"
         android:name="${applicationName}"

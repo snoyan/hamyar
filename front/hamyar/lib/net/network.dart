@@ -66,8 +66,7 @@ class Network {
     var list = await netGet(e_get_rate);
     int t = 0;
 
-    for (int i = 0; i < WelcomeScreen.nurseList.length; i++) {
-      if (WelcomeScreen.nurseList[t].userId == list[t]['nurseId']) {}
+    for (var i in list) {
       rates.add(Rate(
         id: list[t]['id'],
         userId: list[t]['userId'],
