@@ -98,7 +98,7 @@ class NurseInformation extends StatelessWidget {
                     fontFamily: "IranSans", color: Colors.white),
               ),
               Text(
-                agrs.nurse.rate.toString(),
+                "سابقه کار: ${agrs.nurse.workExperience} سال",
                 style: const TextStyle(
                     fontFamily: "IranSans", color: Colors.white),
               ),
@@ -114,11 +114,6 @@ class NurseInformation extends StatelessWidget {
             children: [
               Text(
                 "سن: ${agrs.nurse.age}",
-                style: const TextStyle(
-                    fontFamily: "IranSans", color: Colors.white),
-              ),
-              Text(
-                "سابقه کار: ${agrs.nurse.workExperience} سال",
                 style: const TextStyle(
                     fontFamily: "IranSans", color: Colors.white),
               ),

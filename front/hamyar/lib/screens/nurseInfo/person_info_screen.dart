@@ -237,24 +237,34 @@ class _RatingPopUpState extends State<RatingPopUp> {
               List<Rate> rateList = WelcomeScreen.Rates.where((element) =>
                   element.userId ==
                   int.parse(widget.nurse.userId.toString())).toList();
-              if (number != null && number != '') {
-                for (int i = 0; i < rateList.length; i++) {
-                  if (rateList[i].phoneNumber == number) {
-                    print("this number is exists");
-                    break;
-                  } else {
-                    Navigator.pop(context);
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return giveRate(context);
-                        });
-                    break;
+              if (rateList.isNotEmpty) {
+                if (number != null && number != '') {
+                  for (int i = 0; i < rateList.length; i++) {
+                    if (rateList[i].phoneNumber == number) {
+                      print("this number is exists");
+                      break;
+                    } else {
+                      Navigator.pop(context);
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return giveRate(context);
+                          });
+                      break;
+                    }
                   }
-                }
-              } else
-                print('number is empty');
-              //check is that number exists in the list or not
+                } else
+                  print('number is empty');
+                //check is that number exists in the list or not
+
+              } else {
+                Navigator.pop(context);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return giveRate(context);
+                    });
+              }
             },
           )
         ],
@@ -263,6 +273,7 @@ class _RatingPopUpState extends State<RatingPopUp> {
   }
 
   Card giveRate(BuildContext context) {
+    double ratieng = 2;
     return Card(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -284,10 +295,10 @@ class _RatingPopUpState extends State<RatingPopUp> {
           RatingBar.builder(
             maxRating: 10,
             itemSize: 42,
-            initialRating: 3,
+            initialRating: 2,
             minRating: 1,
             direction: Axis.horizontal,
-            allowHalfRating: true,
+            allowHalfRating: false,
             itemCount: 5,
             itemPadding: const EdgeInsets.symmetric(horizontal: 0.0),
             itemBuilder: (context, x) => const Icon(
@@ -296,39 +307,44 @@ class _RatingPopUpState extends State<RatingPopUp> {
               color: Colors.amber,
             ),
             onRatingUpdate: (rating) {
+              ratieng = rating;
               print(rating);
             },
           ),
           DefaultButton(
             color: kBaseColor5,
             text: 'تایید',
-            press: () {
-              Navigator.pop(context);
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Card(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15.0),
-                        ),
-                      ),
-                      margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.08,
-                        vertical: MediaQuery.of(context).size.height * 0.43,
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'امتیاز شما با موفقیت ثبت شد',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'iransans',
-                            fontSize: 19,
+            press: () async {
+              if (await Network()
+                  .createRate(widget.nurse.userId!, ratieng.toInt(), number)) {
+                Navigator.pop(context);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Card(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15.0),
                           ),
                         ),
-                      ),
-                    );
-                  });
+                        margin: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.08,
+                          vertical: MediaQuery.of(context).size.height * 0.43,
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'امتیاز شما با موفقیت ثبت شد',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'iransans',
+                              fontSize: 19,
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+              } else
+                print('مجدد تلاش کنید');
             },
           )
         ],

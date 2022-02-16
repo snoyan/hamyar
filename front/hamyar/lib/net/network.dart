@@ -23,6 +23,34 @@ void upDateSharedPreferences(String token, int id) async {
 class Network {
   List<Nurse> nurses = [];
   List<Rate> rates = [];
+
+  /////////////post rate/////////////////
+  createRate(int userId, int rate, String phoneNumber) async {
+    var url = Uri.parse('https://epic1729.pythonanywhere.com/api/rate/create/');
+    try {
+      final response = await http.post(url,
+          headers: <String, String>{
+            'Authorization': apiKey,
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(<String, dynamic>{
+            'userId': userId,
+            'rate': rate,
+            'phoneNumber': phoneNumber
+          }));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('rate is created');
+        return true;
+      } else {
+        return false;
+        print('rate is not create');
+      }
+    } catch (exception) {
+      print(exception);
+    }
+  }
+
+  /////////////set nurse list by state//////
   stateNurseList() {
     Advertising.stateNurses = WelcomeScreen.nurseList
         .where(
@@ -38,7 +66,7 @@ class Network {
     var list = await netGet(e_get_rate);
     int t = 0;
 
-    for (var i in list) {
+    for (int i = 0; i < WelcomeScreen.nurseList.length; i++) {
       if (WelcomeScreen.nurseList[t].userId == list[t]['nurseId']) {}
       rates.add(Rate(
         id: list[t]['id'],
@@ -67,7 +95,7 @@ class Network {
         print("rate is ${nurse.rate}");
       }
     }
-    //await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 5));
 
     return rates;
   }
